@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinanceFlow - Controle de Gastos</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #f4f7fb;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+      padding: 24px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 24px;
+      color: #0077b6;
+    }
+
+    .form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .form input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .form button {
+      padding: 10px 18px;
+      background: #0077b6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .form button:hover {
+      background: #023e8a;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .card h2 {
+      margin-bottom: 12px;
+      color: #03045e;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .total {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 12px;
+      color: #0077b6;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 300px !important;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>FinanceFlow - Controle de Gastos</h1>
+
+    <div class="form">
+      <input type="text" id="descricao" placeholder="Descrição do gasto">
+      <input type="number" id="valor" placeholder="Valor (R$)" step="0.01">
+      <button onclick="adicionarGasto()">Adicionar</button>
+    </div>
+
+    <div class="dashboard">
+      <div class="card">
+        <h2>Lista de Gastos</h2>
+        <ul id="listaGastos"></ul>
+        <div class="total">Total: R$ <span id="total">0.00</span></div>
+      </div>
+
+      <div class="card">
+        <h2>Gráfico de Gastos</h2>
+        <canvas id="graficoGastos"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const listaGastos = document.getElementById("listaGastos");
+    const totalElemento = document.getElementById("total");
+
+    let gastos = [];
+    let total = 0;
+
+    const ctx = document.getElementById("graficoGastos").getContext("2d");
+    const grafico = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels: [],
+        datasets: [{
+          data: [],
+          backgroundColor: [
+            "#0077b6", "#0096c7", "#00b4d8", "#48cae4", "#90e0ef", "#ade8f4"
+          ],
+          borderWidth: 2,
+          borderColor: "#fff"
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: "bottom",
+          }
+        }
+      }
+    });
+
+    function adicionarGasto() {
+      const descricao = document.getElementById("descricao").value.trim();
+      const valor = parseFloat(document.getElementById("valor").value);
+
+      if (descricao === "" || isNaN(valor) || valor <= 0) {
+        alert("Preencha todos os campos corretamente!");
+        return;
+      }
+
+      gastos.push({ descricao, valor });
+      total += valor;
+
+      atualizarLista();
+      atualizarGrafico();
+
+      document.getElementById("descricao").value = "";
+      document.getElementById("valor").value = "";
+    }
+
+    function atualizarLista() {
+      listaGastos.innerHTML = "";
+      gastos.forEach(gasto => {
+        const li = document.createElement("li");
+        li.textContent = `${gasto.descricao} - R$ ${gasto.valor.toFixed(2)}`;
+        listaGastos.appendChild(li);
+      });
+      totalElemento.textContent = total.toFixed(2);
+    }
+
+    function atualizarGrafico() {
+      grafico.data.labels = gastos.map(g => g.descricao);
+      grafico.data.datasets[0].data = gastos.map(g => g.valor);
+      grafico.update();
+    }
+  </script>
+</body>
+</html>

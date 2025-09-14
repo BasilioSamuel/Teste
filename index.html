@@ -46,6 +46,10 @@
       padding: 8px 16px;
       cursor: pointer;
     }
+    .reset-btn {
+      background: red;
+      margin-top: 10px;
+    }
     .dashboard {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -58,7 +62,22 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
     ul { list-style: none; padding: 0; }
-    li { padding: 6px 0; border-bottom: 1px solid #eee; }
+    li {
+      padding: 6px 0;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .delete-btn {
+      background: #e63946;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 2px 8px;
+      cursor: pointer;
+      font-size: 12px;
+    }
     .total { font-weight: bold; margin-top: 10px; color: #0077b6; }
     @media (max-width:768px){
       .dashboard{ grid-template-columns: 1fr; }
@@ -87,6 +106,7 @@
       <input type="text" id="descricao" placeholder="Descrição">
       <input type="number" id="valor" placeholder="Valor (R$)" step="0.01">
       <button onclick="adicionar()">Adicionar</button>
+      <button class="reset-btn" onclick="resetApp()">Resetar Tudo</button>
     </div>
 
     <div class="dashboard">
@@ -172,17 +192,19 @@
       let totalReceitas = 0;
       let categoriasValores = {Abondar:0,Doar:0,Investir:0,Educar:0,Desfrutar:0,Conquistar:0,Sustentar:0,Bug:0};
 
-      dados.gastos.forEach(g => {
+      dados.gastos.forEach((g, index) => {
         const li = document.createElement("li");
-        li.textContent = `Gasto (${g.categoria}): ${g.descricao} - R$ ${g.valor.toFixed(2)}`;
+        li.innerHTML = `Gasto (${g.categoria}): ${g.descricao} - R$ ${g.valor.toFixed(2)}
+          <button class="delete-btn" onclick="remover('gasto', ${index})">X</button>`;
         listaEl.appendChild(li);
         totalGastos += g.valor;
         categoriasValores[g.categoria] += g.valor;
       });
 
-      dados.receitas.forEach(r => {
+      dados.receitas.forEach((r, index) => {
         const li = document.createElement("li");
-        li.textContent = `Receita (${r.categoria}): ${r.descricao} - R$ ${r.valor.toFixed(2)}`;
+        li.innerHTML = `Receita (${r.categoria}): ${r.descricao} - R$ ${r.valor.toFixed(2)}
+          <button class="delete-btn" onclick="remover('receita', ${index})">X</button>`;
         listaEl.appendChild(li);
         totalReceitas += r.valor;
         categoriasValores[r.categoria] += r.valor;
@@ -193,6 +215,22 @@
 
       grafico.data.datasets[0].data = Object.values(categoriasValores);
       grafico.update();
+    }
+
+    function remover(tipo, index) {
+      if (confirm("Deseja realmente apagar este item?")) {
+        dados[tipo === "gasto" ? "gastos" : "receitas"].splice(index, 1);
+        salvar();
+        atualizar();
+      }
+    }
+
+    function resetApp() {
+      if (confirm("Tem certeza que deseja resetar todos os dados?")) {
+        localStorage.removeItem("financeflow");
+        dados = { gastos: [], receitas: [] };
+        atualizar();
+      }
     }
 
     atualizar();

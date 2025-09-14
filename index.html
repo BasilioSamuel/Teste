@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FinanceFlow - Controle de Gastos e Receitas</title>
+  <title>FinanceFlow - Controle Financeiro</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
@@ -74,6 +74,16 @@
         <option value="gasto">Gasto</option>
         <option value="receita">Receita</option>
       </select>
+      <select id="categoria">
+        <option value="Abondar">Abondar</option>
+        <option value="Doar">Doar</option>
+        <option value="Investir">Investir</option>
+        <option value="Educar">Educar</option>
+        <option value="Desfrutar">Desfrutar</option>
+        <option value="Conquistar">Conquistar</option>
+        <option value="Sustentar">Sustentar</option>
+        <option value="Bug">Bug</option>
+      </select>
       <input type="text" id="descricao" placeholder="Descrição">
       <input type="number" id="valor" placeholder="Valor (R$)" step="0.01">
       <button onclick="adicionar()">Adicionar</button>
@@ -86,7 +96,7 @@
         <div class="total">Saldo: R$ <span id="saldo">0.00</span></div>
       </div>
       <div class="card">
-        <h2>Gráfico</h2>
+        <h2>Gráfico por Categoria (%)</h2>
         <canvas id="grafico"></canvas>
       </div>
     </div>
@@ -96,30 +106,41 @@
     const listaEl = document.getElementById("lista");
     const saldoEl = document.getElementById("saldo");
 
-    // Carregar do localStorage
     let dados = JSON.parse(localStorage.getItem("financeflow")) || { gastos: [], receitas: [] };
 
-    // Configuração do gráfico
     const ctx = document.getElementById("grafico").getContext("2d");
     const grafico = new Chart(ctx, {
       type: "doughnut",
       data: {
-        labels: ["Gastos", "Receitas"],
+        labels: ["Abondar","Doar","Investir","Educar","Desfrutar","Conquistar","Sustentar","Bug"],
         datasets: [{
-          data: [0, 0],
-          backgroundColor: ["#e63946", "#2a9d8f"],
+          data: Array(8).fill(0),
+          backgroundColor: ["#264653","#2a9d8f","#e9c46a","#f4a261","#e76f51","#6a4c93","#0077b6","#90e0ef"],
           borderWidth: 2,
           borderColor: "#fff"
         }]
       },
       options: {
         responsive: true,
-        plugins: { legend: { position: "bottom" } }
+        plugins: { 
+          legend: { position: "bottom" },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                let total = context.dataset.data.reduce((a,b)=>a+b,0);
+                let valor = context.raw;
+                let pct = total ? ((valor/total)*100).toFixed(1) : 0;
+                return `${context.label}: R$ ${valor.toFixed(2)} (${pct}%)`;
+              }
+            }
+          }
+        }
       }
     });
 
     function adicionar() {
       const tipo = document.getElementById("tipo").value;
+      const categoria = document.getElementById("categoria").value;
       const descricao = document.getElementById("descricao").value.trim();
       const valor = parseFloat(document.getElementById("valor").value);
 
@@ -129,9 +150,9 @@
       }
 
       if (tipo === "gasto") {
-        dados.gastos.push({ descricao, valor });
+        dados.gastos.push({ descricao, valor, categoria });
       } else {
-        dados.receitas.push({ descricao, valor });
+        dados.receitas.push({ descricao, valor, categoria });
       }
 
       salvar();
@@ -149,29 +170,31 @@
       listaEl.innerHTML = "";
       let totalGastos = 0;
       let totalReceitas = 0;
+      let categoriasValores = {Abondar:0,Doar:0,Investir:0,Educar:0,Desfrutar:0,Conquistar:0,Sustentar:0,Bug:0};
 
       dados.gastos.forEach(g => {
         const li = document.createElement("li");
-        li.textContent = `Gasto: ${g.descricao} - R$ ${g.valor.toFixed(2)}`;
+        li.textContent = `Gasto (${g.categoria}): ${g.descricao} - R$ ${g.valor.toFixed(2)}`;
         listaEl.appendChild(li);
         totalGastos += g.valor;
+        categoriasValores[g.categoria] += g.valor;
       });
 
       dados.receitas.forEach(r => {
         const li = document.createElement("li");
-        li.textContent = `Receita: ${r.descricao} - R$ ${r.valor.toFixed(2)}`;
+        li.textContent = `Receita (${r.categoria}): ${r.descricao} - R$ ${r.valor.toFixed(2)}`;
         listaEl.appendChild(li);
         totalReceitas += r.valor;
+        categoriasValores[r.categoria] += r.valor;
       });
 
       const saldo = totalReceitas - totalGastos;
       saldoEl.textContent = saldo.toFixed(2);
 
-      grafico.data.datasets[0].data = [totalGastos, totalReceitas];
+      grafico.data.datasets[0].data = Object.values(categoriasValores);
       grafico.update();
     }
 
-    // Atualizar ao carregar a página
     atualizar();
   </script>
 </body>

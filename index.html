@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -52,7 +52,7 @@
     }
     .dashboard {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr; /* duas colunas */
       gap: 20px;
     }
     .card {
@@ -110,14 +110,17 @@
     </div>
 
     <div class="dashboard">
+      <!-- Primeiro o gráfico (esquerda) -->
+      <div class="card">
+        <h2>Gráfico de Gastos por Categoria (%)</h2>
+        <canvas id="grafico"></canvas>
+      </div>
+
+      <!-- Depois a lista (direita) -->
       <div class="card">
         <h2>Lista</h2>
         <ul id="lista"></ul>
         <div class="total">Saldo: R$ <span id="saldo">0.00</span></div>
-      </div>
-      <div class="card">
-        <h2>Gráfico por Categoria (%)</h2>
-        <canvas id="grafico"></canvas>
       </div>
     </div>
   </div>
@@ -192,6 +195,7 @@
       let totalReceitas = 0;
       let categoriasValores = {Abondar:0,Doar:0,Investir:0,Educar:0,Desfrutar:0,Conquistar:0,Sustentar:0,Bug:0};
 
+      // Apenas os gastos vão para o gráfico
       dados.gastos.forEach((g, index) => {
         const li = document.createElement("li");
         li.innerHTML = `Gasto (${g.categoria}): ${g.descricao} - R$ ${g.valor.toFixed(2)}
@@ -201,13 +205,13 @@
         categoriasValores[g.categoria] += g.valor;
       });
 
+      // As receitas só entram no saldo e lista
       dados.receitas.forEach((r, index) => {
         const li = document.createElement("li");
         li.innerHTML = `Receita (${r.categoria}): ${r.descricao} - R$ ${r.valor.toFixed(2)}
           <button class="delete-btn" onclick="remover('receita', ${index})">X</button>`;
         listaEl.appendChild(li);
         totalReceitas += r.valor;
-        categoriasValores[r.categoria] += r.valor;
       });
 
       const saldo = totalReceitas - totalGastos;

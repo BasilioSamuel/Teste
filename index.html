@@ -52,7 +52,7 @@
     }
     .dashboard {
       display: grid;
-      grid-template-columns: 1fr 1fr; /* duas colunas */
+      grid-template-columns: 1fr 1fr;
       gap: 20px;
     }
     .card {
@@ -94,7 +94,7 @@
         <option value="receita">Receita</option>
       </select>
       <select id="categoria">
-        <option value="Abondar">Abundar</option>
+        <option value="Abundar">Abundar</option>
         <option value="Doar">Doar</option>
         <option value="Investir">Investir</option>
         <option value="Educar">Educar</option>
@@ -110,13 +110,11 @@
     </div>
 
     <div class="dashboard">
-      <!-- Primeiro o gráfico (esquerda) -->
       <div class="card">
-        <h2>Gráfico de Gastos por Categoria (%)</h2>
+        <h2>Distribuição da Receita (%)</h2>
         <canvas id="grafico"></canvas>
       </div>
 
-      <!-- Depois a lista (direita) -->
       <div class="card">
         <h2>Lista</h2>
         <ul id="lista"></ul>
@@ -135,10 +133,13 @@
     const grafico = new Chart(ctx, {
       type: "doughnut",
       data: {
-        labels: ["Abondar","Doar","Investir","Educar","Desfrutar","Conquistar","Sustentar","Bug"],
+        labels: ["Abundar","Doar","Investir","Educar","Desfrutar","Conquistar","Sustentar","Bug","Sobra"],
         datasets: [{
-          data: Array(8).fill(0),
-          backgroundColor: ["#264653","#2a9d8f","#e9c46a","#f4a261","#e76f51","#6a4c93","#0077b6","#90e0ef"],
+          data: Array(9).fill(0),
+          backgroundColor: [
+            "#264653","#2a9d8f","#e9c46a","#f4a261","#e76f51",
+            "#6a4c93","#0077b6","#90e0ef","#06d6a0"
+          ],
           borderWidth: 2,
           borderColor: "#fff"
         }]
@@ -193,9 +194,11 @@
       listaEl.innerHTML = "";
       let totalGastos = 0;
       let totalReceitas = 0;
-      let categoriasValores = {Abondar:0,Doar:0,Investir:0,Educar:0,Desfrutar:0,Conquistar:0,Sustentar:0,Bug:0};
+      let categoriasValores = {
+        Abundar:0,Doar:0,Investir:0,Educar:0,
+        Desfrutar:0,Conquistar:0,Sustentar:0,Bug:0
+      };
 
-      // Apenas os gastos vão para o gráfico
       dados.gastos.forEach((g, index) => {
         const li = document.createElement("li");
         li.innerHTML = `Gasto (${g.categoria}): ${g.descricao} - R$ ${g.valor.toFixed(2)}
@@ -205,10 +208,9 @@
         categoriasValores[g.categoria] += g.valor;
       });
 
-      // As receitas só entram no saldo e lista
       dados.receitas.forEach((r, index) => {
         const li = document.createElement("li");
-        li.innerHTML = `Receita (${r.categoria}): ${r.descricao} - R$ ${r.valor.toFixed(2)}
+        li.innerHTML = `Receita: ${r.descricao} - R$ ${r.valor.toFixed(2)}
           <button class="delete-btn" onclick="remover('receita', ${index})">X</button>`;
         listaEl.appendChild(li);
         totalReceitas += r.valor;
@@ -217,7 +219,22 @@
       const saldo = totalReceitas - totalGastos;
       saldoEl.textContent = saldo.toFixed(2);
 
-      grafico.data.datasets[0].data = Object.values(categoriasValores);
+      let dadosGrafico = Object.values(categoriasValores);
+      let somaGastos = dadosGrafico.reduce((a,b)=>a+b,0);
+
+      // adicionar sobra se tiver receita maior que gastos
+      if (saldo > 0) {
+        dadosGrafico.push(saldo);
+      } else {
+        dadosGrafico.push(0);
+      }
+
+      // transformar em percentual da receita
+      if (totalReceitas > 0) {
+        dadosGrafico = dadosGrafico.map(v => (v/totalReceitas)*totalReceitas);
+      }
+
+      grafico.data.datasets[0].data = dadosGrafico;
       grafico.update();
     }
 

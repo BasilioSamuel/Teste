@@ -1,193 +1,149 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💰 FinanceFlow — Minimal Dashboard</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-/* ====== Reset & Base ====== */
-* { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg: #f5f8fb;
-  --card: #ffffff;
-  --primary: #0077b6;
-  --muted: #6c757d;
-  --positive: #28a745;
-  --negative: #dc3545;
-}
-html, body {
-  height: 100%;
-}
-body {
-  font-family: Inter, 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial;
-  background: linear-gradient(180deg, var(--bg) 0%, #eef6fb 100%);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 16px;
-}
-.wrap {
-  width: 100%;
-  max-width: 1200px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ====== Panel ====== */
-.panel {
-  flex: 1;
-  background: var(--card);
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(2,40,80,0.06);
-  padding: 20px;
-  overflow-y: auto;
-}
-
-/* ====== Header ====== */
-header { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
-header h1 { font-size: 1.4rem; color: var(--primary); font-weight: 700; letter-spacing: -0.2px; }
-header p { color: var(--muted); font-size: 0.95rem; }
-
-/* ====== Controls ====== */
-.controls {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 10px;
-  margin: 20px 0;
-}
-.controls select, .controls input {
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #e9eef6;
-  background: #fff;
-}
-.controls button {
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: none;
-  background: linear-gradient(90deg, var(--primary), #005a8d);
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-}
-.controls .danger {
-  background: linear-gradient(90deg, #dc3545, #b52b2b);
-}
-
-/* ====== Stats ====== */
-.stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 20px;
-}
-.stat {
-  background: #fbfdff;
-  border-radius: 12px;
-  padding: 14px;
-  border: 1px solid #f1f5f9;
-  text-align: left;
-}
-.stat .label {
-  font-size: 0.75rem;
-  color: var(--muted);
-  text-transform: uppercase;
-  font-weight: 700;
-  letter-spacing: 0.6px;
-}
-.stat .value {
-  font-size: 1.05rem;
-  font-weight: 800;
-  margin-top: 8px;
-}
-.stat.positive .value { color: var(--positive); }
-.stat.negative .value { color: var(--negative); }
-
-/* ====== Layout ====== */
-.grid {
-  display: grid;
-  grid-template-columns: 2fr 1.2fr;
-  gap: 18px;
-}
-.card {
-  background: var(--card);
-  border-radius: 14px;
-  padding: 18px;
-  border: 1px solid #f1f5f9;
-  box-shadow: 0 6px 18px rgba(2,40,80,0.03);
-}
-.card h2 {
-  font-size: 1rem;
-  margin-bottom: 12px;
-  color: #223;
-}
-
-/* ====== Table ====== */
-.table-wrapper {
-  max-height: 200px;
-  overflow-y: auto;
-  border-radius: 12px;
-}
-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
-thead th { text-align: left; padding: 10px 8px; font-weight: 700; color: #334; background: #fbfdff; border-bottom: 1px solid #eef3f8; }
-tbody td { padding: 10px 8px; border-bottom: 1px solid #f3f6fb; }
-.tbl-type { text-transform: capitalize; width: 90px; }
-.tbl-cat { width: 120px; color: #556; }
-.tbl-amt { font-weight: 800; width: 110px; text-align: right; }
-.positivo { color: var(--positive); }
-.negativo { color: var(--negative); }
-.btn-del { background: transparent; border: 1px solid #f1f1f1; padding: 6px 8px; border-radius: 8px; cursor: pointer; }
-
-/* ====== Category breakdown ====== */
-.category-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  border-top: 1px solid #f3f6fb;
-}
-.category-name { display: flex; gap: 8px; align-items: center; }
-.dot { width: 10px; height: 10px; border-radius: 50%; display:inline-block; }
-
-/* ====== Gráficos ====== */
-canvas {
-  width: 100% !important;
-  max-height: 300px;
-}
-
-/* ====== Small chart ====== */
-.small-chart { height: 160px; margin-top:10px; }
-
-/* ====== Responsive ====== */
-@media (max-width: 920px) {
-  .grid { grid-template-columns: 1fr; }
-  .stats { grid-template-columns: repeat(2, 1fr); }
-}
-
-/* ====== Fade ====== */
-.fade { animation: fadeIn .45s ease both; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💰 FinanceFlow - Controle Financeiro</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      background: linear-gradient(135deg, #f4f7fb 0%, #e8f0f7 100%);
+      font-family: "Segoe UI", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 20px;
+      min-height: 100vh;
+    }
+    .container{
+      width: 100%;
+      max-width: 1200px;
+      background:#fff;
+      border-radius:24px;
+      box-shadow:0 10px 40px rgba(0,119,182,0.08);
+      padding:40px;
+      display:flex;
+      flex-direction:column;
+      gap:32px;
+    }
+    h1{text-align:center;margin-bottom:10px;color:#0077b6;font-size:2.5em;font-weight:600;letter-spacing:-0.5px;}
+    .subtitle{text-align:center;color:#6c757d;font-size:0.95em;margin-bottom:40px;font-weight:400;}
+    .form{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+      gap:12px;
+      margin-bottom:40px;
+      background:#f8f9fa;
+      padding:24px;
+      border-radius:16px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.04);
+    }
+    .form input, .form select{
+      padding:12px 16px;
+      border:2px solid #e9ecef;
+      border-radius:12px;
+      font-size:0.95em;
+      transition: all 0.3s ease;
+      background:white;
+    }
+    .form input:focus, .form select:focus{
+      outline:none;
+      border-color:#0077b6;
+      box-shadow:0 0 0 3px rgba(0,119,182,0.1);
+    }
+    .form button{
+      background: linear-gradient(135deg, #0077b6 0%, #005a8d 100%);
+      color:white;
+      border:none;
+      border-radius:12px;
+      padding:12px 20px;
+      cursor:pointer;
+      font-weight:600;
+      font-size:0.95em;
+      transition:all 0.3s ease;
+      box-shadow:0 4px 12px rgba(0,119,182,0.2);
+    }
+    .form button:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,119,182,0.3);}
+    .reset-btn{
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+      box-shadow:0 4px 12px rgba(220,53,69,0.2) !important;
+    }
+    .reset-btn:hover{box-shadow:0 6px 20px rgba(220,53,69,0.3) !important;}
+    .dashboard{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;}
+    .salary-section{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+    .card{
+      background:#fff;
+      padding:28px;
+      border-radius:20px;
+      box-shadow:0 4px 20px rgba(0,0,0,0.06);
+      border:1px solid #f1f3f5;
+      transition:all 0.3s ease;
+    }
+    .card:hover{box-shadow:0 8px 30px rgba(0,119,182,0.12);transform:translateY(-2px);}
+    .card h2{font-size:1.3em;color:#212529;margin-bottom:20px;font-weight:600;display:flex;align-items:center;gap:8px;}
+    ul{list-style:none;max-height:400px;overflow-y:auto;}
+    ul::-webkit-scrollbar{width:6px;}
+    ul::-webkit-scrollbar-track{background:#f1f3f5;border-radius:10px;}
+    ul::-webkit-scrollbar-thumb{background:#0077b6;border-radius:10px;}
+    li{padding:12px 0;border-bottom:1px solid #f1f3f5;display:flex;justify-content:space-between;align-items:center;font-size:0.95em;color:#495057;transition:background 0.2s ease;}
+    li:hover{background:#f8f9fa;padding-left:8px;border-radius:8px;}
+    .delete-btn{
+      background:#dc3545;color:#fff;border:none;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:11px;font-weight:600;transition:all 0.2s ease;opacity:0.8;
+    }
+    .delete-btn:hover{opacity:1;transform:scale(1.05);}
+    .total{font-weight:600;margin-top:16px;padding-top:16px;border-top:2px solid #0077b6;color:#0077b6;font-size:1.2em;}
+    .salary-input{display:flex;gap:12px;margin-bottom:20px;}
+    .salary-input input{flex:1;padding:12px 16px;border:2px solid #e9ecef;border-radius:12px;font-size:0.95em;}
+    .salary-input button{
+      background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+      color:white;border:none;border-radius:12px;padding:12px 24px;cursor:pointer;font-weight:600;transition:all 0.3s ease;box-shadow:0 4px 12px rgba(40,167,69,0.2);
+    }
+    .salary-input button:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(40,167,69,0.3);}
+    .salary-display{
+      background: linear-gradient(135deg, #e7f5ff 0%, #d0ebff 100%);
+      padding:20px;
+      border-radius:16px;
+      margin-bottom:20px;
+      border-left:4px solid #0077b6;
+    }
+    .salary-display .label{font-size:0.85em;color:#0077b6;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;}
+    .salary-display .value{font-size:2em;color:#0077b6;font-weight:700;}
+    .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px;margin-bottom:24px;}
+    .stat-card{background:white;padding:16px;border-radius:12px;text-align:center;border:2px solid #f1f3f5;transition:all 0.3s ease;}
+    .stat-card:hover{border-color:#0077b6;transform:translateY(-2px);}
+    .stat-card .stat-label{font-size:0.75em;color:#6c757d;text-transform:uppercase;font-weight:600;margin-bottom:8px;letter-spacing:0.5px;}
+    .stat-card .stat-value{font-size:1.5em;font-weight:700;color:#212529;}
+    .stat-card.positive .stat-value{color:#28a745;}
+    .stat-card.negative .stat-value{color:#dc3545;}
+    .stat-card.neutral .stat-value{color:#0077b6;}
+    .progress-bar{width:100%;height:8px;background:#e9ecef;border-radius:10px;overflow:hidden;margin-top:8px;}
+    .progress-fill{height:100%;background: linear-gradient(90deg, #0077b6 0%, #00a8e8 100%);transition: width 0.5s ease;border-radius:10px;}
+    .category-breakdown{margin-top:20px;}
+    .category-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f1f3f5;}
+    .category-item .category-name{display:flex;align-items:center;gap:8px;font-size:0.9em;font-weight:500;}
+    .category-item .category-amount{font-weight:600;color:#0077b6;}
+    .color-dot{width:12px;height:12px;border-radius:50%;display:inline-block;}
+    .small-chart-container{position:relative;height:200px;}
+    .empty-state{text-align:center;padding:40px 20px;color:#6c757d;}
+    .empty-state-icon{font-size:4em;margin-bottom:16px;opacity:0.3;}
+    .empty-state-text{font-size:1.1em;font-weight:500;}
+    .fade-in{animation: fadeIn 0.5s ease-in;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+    @media(max-width:968px){.dashboard,.salary-section{grid-template-columns:1fr}.stats-grid{grid-template-columns:1fr;}}
+    @media(max-width:768px){.container{padding:24px;}h1{font-size:2em;}.form{grid-template-columns:1fr;}.stats-grid{grid-template-columns:1fr;}}
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="panel fade">
-    <header>
-      <div>
-        <h1>💰 FinanceFlow</h1>
-        <p>Dashboard minimalista — distribuído por categorias, com dívidas e lucros</p>
-      </div>
-    </header>
+  <div class="container">
+    <h1>💰 FinanceFlow</h1>
+    <div class="subtitle">Controle Financeiro Inteligente</div>
 
-    <div class="controls">
+    <div class="form">
       <select id="tipo">
         <option value="gasto">💸 Gasto</option>
         <option value="receita">💵 Receita</option>
-        <option value="divida">🧾 Dívida</option>
-        <option value="lucro">📈 Lucro</option>
       </select>
-
       <select id="categoria">
         <option value="Abundar">Abundar</option>
         <option value="Doar">Doar</option>
@@ -198,212 +154,190 @@ canvas {
         <option value="Sustentar">Sustentar</option>
         <option value="Bug">Bug</option>
       </select>
-
-      <input id="descricao" placeholder="Descrição" />
-      <input id="valor" type="number" step="0.01" placeholder="Valor (R$)" />
-      <button id="addBtn">➕ Adicionar</button>
-      <button id="resetBtn" class="danger">🗑 Resetar</button>
+      <input type="text" id="descricao" placeholder="Descrição da transação">
+      <input type="number" id="valor" placeholder="Valor (R$)" step="0.01">
+      <button onclick="adicionar()">➕ Adicionar</button>
+      <button class="reset-btn" onclick="resetApp()">🗑️ Resetar</button>
     </div>
 
-    <div class="stats">
-      <div class="stat positive">
-        <div class="label">Receitas</div>
-        <div class="value" id="totalReceitas">R$ 0,00</div>
+    <div class="stats-grid">
+      <div class="stat-card positive">
+        <div class="stat-label">💵 Total Receitas</div>
+        <div class="stat-value" id="totalReceitas">R$ 0,00</div>
+        <div class="progress-bar"><div class="progress-fill" id="progressReceitas" style="width:0%"></div></div>
       </div>
-      <div class="stat negative">
-        <div class="label">Gastos</div>
-        <div class="value" id="totalGastos">R$ 0,00</div>
+      <div class="stat-card negative">
+        <div class="stat-label">💸 Total Gastos</div>
+        <div class="stat-value" id="totalGastos">R$ 0,00</div>
+        <div class="progress-bar"><div class="progress-fill" id="progressGastos" style="width:0%;background: linear-gradient(90deg,#dc3545 0%,#ff6b7a 100%)"></div></div>
       </div>
-      <div class="stat negative">
-        <div class="label">Dívidas</div>
-        <div class="value" id="totalDividas">R$ 0,00</div>
-      </div>
-      <div class="stat positive">
-        <div class="label">Lucros</div>
-        <div class="value" id="totalLucros">R$ 0,00</div>
+      <div class="stat-card neutral">
+        <div class="stat-label">💰 Economia</div>
+        <div class="stat-value" id="economia">0%</div>
       </div>
     </div>
 
-    <div class="grid">
+    <div class="dashboard">
       <div class="card">
-        <h2>📊 Distribuição (gastos por categoria + dívidas e lucros)</h2>
+        <h2>📊 Distribuição da Receita</h2>
         <canvas id="grafico"></canvas>
-        <div class="breakdown" id="categoryBreakdown"></div>
+        <div class="category-breakdown" id="categoryBreakdown"></div>
       </div>
-
       <div class="card">
-        <h2>📝 Transações & Salário</h2>
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Tipo</th>
-                <th>Categoria</th>
-                <th>Descrição</th>
-                <th style="text-align:right">Valor (R$)</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody id="tabela"></tbody>
-          </table>
-        </div>
+        <h2>📝 Transações</h2>
+        <ul id="lista"></ul>
+        <div class="total">Saldo: R$ <span id="saldo">0.00</span></div>
+      </div>
+    </div>
 
-        <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <div style="font-size:0.9rem;color:var(--muted)">Salário disponível</div>
-            <div style="font-weight:800; margin-top:6px">R$ <span id="salarioValor">0.00</span></div>
-          </div>
-
-          <div style="display:flex; gap:8px; align-items:center;">
-            <input id="salario" placeholder="Salário mensal" type="number" step="0.01" style="width:160px"/>
-            <button id="defSalarioBtn">Definir</button>
-          </div>
+    <div class="salary-section">
+      <div class="card">
+        <h2>💼 Salário Mensal</h2>
+        <div class="salary-input">
+          <input type="number" id="salario" placeholder="Digite seu salário mensal" step="0.01">
+          <button onclick="definirSalario()">Definir</button>
         </div>
-
-        <div style="margin-top:12px; font-size:0.95rem"><strong>Saldo:</strong> R$ <span id="saldo">0.00</span></div>
-        <div class="small-chart">
-          <canvas id="graficoSalario"></canvas>
+        <div class="salary-display">
+          <div class="label">Salário Disponível</div>
+          <div class="value">R$ <span id="salarioValor">0.00</span></div>
         </div>
+      </div>
+      <div class="card">
+        <h2>📈 Uso do Salário</h2>
+        <div class="small-chart-container"><canvas id="graficoSalario"></canvas></div>
       </div>
     </div>
   </div>
-</div>
 
-<script>
-// ====== Dados iniciais ======
-let dados = { gastos: [], receitas: [], dividas: [], lucros: [], salario: 0 };
-const tabelaEl = document.getElementById('tabela');
-const saldoEl = document.getElementById('saldo');
-const salarioValorEl = document.getElementById('salarioValor');
-const totalReceitasEl = document.getElementById('totalReceitas');
-const totalGastosEl = document.getElementById('totalGastos');
-const totalDividasEl = document.getElementById('totalDividas');
-const totalLucrosEl = document.getElementById('totalLucros');
-const categoriesList = ['Abundar','Doar','Investir','Educar','Desfrutar','Conquistar','Sustentar','Bug'];
+  <script>
+    const listaEl = document.getElementById("lista");
+    const saldoEl = document.getElementById("saldo");
+    const salarioValorEl = document.getElementById("salarioValor");
 
-// ====== Chart principal ======
-const ctx = document.getElementById('grafico').getContext('2d');
-const graficoLabels = [...categoriesList, 'Dívidas', 'Lucros', 'Sobra'];
-const graficoColors = ['#264653','#2a9d8f','#e9c46a','#f4a261','#e76f51','#6a4c93','#0077b6','#90e0ef','#e63946','#06d6a0','#06a7d6'];
-const grafico = new Chart(ctx,{
-  type:'doughnut',
-  data:{ labels:graficoLabels, datasets:[{ data:Array(graficoLabels.length).fill(0), backgroundColor:graficoColors, borderColor:'#fff', borderWidth:3 }] },
-  options:{ responsive:true, maintainAspectRatio:false, cutout:'68%', animation:{animateRotate:true,animateScale:true,duration:600}, plugins:{ legend:{position:'bottom', labels:{boxWidth:10,padding:12}}, tooltip:{padding:10, cornerRadius:8, backgroundColor:'rgba(0,0,0,0.8)', callbacks:{ label: ctx => { const total=ctx.dataset.data.reduce((a,b)=>a+b,0); const val=ctx.raw||0; const pct=total?((val/total)*100).toFixed(1):0; return `${ctx.label}: R$ ${Number(val).toFixed(2)} (${pct}%)`; } } } } } });
+    let dados = { gastos:[], receitas:[], salario:0 };
 
-// ====== Chart salário ======
-const ctxS = document.getElementById('graficoSalario').getContext('2d');
-const graficoSalario = new Chart(ctxS,{
-  type:'doughnut',
-  data:{ labels:['Gastos','Receitas','Dívidas','Lucros'], datasets:[{ data:[0,0,0,0], backgroundColor:['#e76f51','#28a745','#e63946','#06d6a0'], borderColor:'#fff', borderWidth:3 }] },
-  options:{ responsive:true, maintainAspectRatio:false, cutout:'60%', plugins:{ legend:{position:'bottom', labels:{boxWidth:10}} } }
-});
+    const coresCategorias = { Abundar:"#264653",Doar:"#2a9d8f",Investir:"#e9c46a",Educar:"#f4a261",Desfrutar:"#e76f51",Conquistar:"#6a4c93",Sustentar:"#0077b6",Bug:"#90e0ef" };
 
-// ====== Utilidades ======
-const currency=v=>Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
-const makeId=()=>Date.now().toString(36)+Math.floor(Math.random()*10000).toString(36);
+    const grafico = new Chart(document.getElementById("grafico").getContext("2d"),{
+      type:"doughnut",
+      data:{
+        labels: Object.keys(coresCategorias).concat("Sobra"),
+        datasets:[{ data:Array(9).fill(0), backgroundColor:Object.values(coresCategorias).concat("#06d6a0"), borderWidth:2, borderColor:"#fff" }]
+      },
+      options:{
+        responsive:true,
+        plugins:{ legend:{ position:"bottom", labels:{ padding:15, font:{ size:11 }, usePointStyle:true, pointStyle:"circle" } }, tooltip:{ backgroundColor:'rgba(0,0,0,0.8)', padding:12, cornerRadius:8, callbacks:{ label:function(ctx){ let total = ctx.dataset.data.reduce((a,b)=>a+b,0); let valor=ctx.raw; let pct = total?((valor/total)*100).toFixed(1):0; return `${ctx.label}: R$ ${valor.toFixed(2)} (${pct}%)`; }}}}
+      }
+    });
 
-// ====== Eventos ======
-document.getElementById('addBtn').addEventListener('click', adicionar);
-document.getElementById('resetBtn').addEventListener('click', resetApp);
-document.getElementById('defSalarioBtn').addEventListener('click', definirSalario);
+    const graficoSalario = new Chart(document.getElementById("graficoSalario").getContext("2d"),{
+      type:"doughnut",
+      data:{ labels:["Gastos","Receitas","Disponível"], datasets:[{ data:[0,0,0], backgroundColor:["#dc3545","#28a745","#0077b6"], borderWidth:2, borderColor:"#fff" }]},
+      options:{ responsive:true, plugins:{ legend:{ position:"bottom", labels:{ padding:12, font:{ size:11 }, usePointStyle:true, pointStyle:"circle" } }, tooltip:{ backgroundColor:'rgba(0,0,0,0.8)', padding:12, cornerRadius:8, callbacks:{ label:function(ctx){ let total=ctx.dataset.data.reduce((a,b)=>a+b,0); let valor=ctx.raw; let pct=total?((valor/total)*100).toFixed(1):0; return `${ctx.label}: R$ ${valor.toFixed(2)} (${pct}%)`; }}}} }
+    });
 
-// ====== Funções ======
-function definirSalario(){
-  const s=parseFloat(document.getElementById('salario').value);
-  if(isNaN(s)||s<=0){ alert('Digite um salário válido'); return; }
-  dados.salario=s;
-  document.getElementById('salario').value='';
-  atualizar();
-}
-
-function adicionar(){
-  const tipo=document.getElementById('tipo').value;
-  const categoria=document.getElementById('categoria').value;
-  const descricao=document.getElementById('descricao').value.trim();
-  const valor=parseFloat(document.getElementById('valor').value);
-  if(!descricao||isNaN(valor)||valor<=0){ alert('Preencha corretamente.'); return; }
-  const item={ id: makeId(), descricao, valor, categoria };
-  if(tipo==='gasto') dados.gastos.push(item);
-  else if(tipo==='receita') dados.receitas.push(item);
-  else if(tipo==='divida') dados.dividas.push(item);
-  else if(tipo==='lucro') dados.lucros.push(item);
-  document.getElementById('descricao').value='';
-  document.getElementById('valor').value='';
-  document.getElementById('tipo').value='gasto';
-  atualizar();
-}
-
-function resetApp(){
-  if(!confirm('Resetar todos os dados?')) return;
-  dados={ gastos: [], receitas: [], dividas: [], lucros: [], salario: 0 };
-  atualizar();
-}
-
-function removerPorId(id){
-  if(!confirm('Deseja realmente apagar este item?')) return;
-  ['gastos','receitas','dividas','lucros'].forEach(arrName=>{
-    const idx=dados[arrName].findIndex(it=>it.id===id);
-    if(idx!==-1) dados[arrName].splice(idx,1);
-  });
-  atualizar();
-}
-
-function atualizar(){
-  const totalGastos=dados.gastos.reduce((s,i)=>s+i.valor,0);
-  const totalReceitas=dados.receitas.reduce((s,i)=>s+i.valor,0);
-  const totalDividas=dados.dividas.reduce((s,i)=>s+i.valor,0);
-  const totalLucros=dados.lucros.reduce((s,i)=>s+i.valor,0);
-  const saldo=(totalReceitas+totalLucros)-(totalGastos+totalDividas);
-
-  totalReceitasEl.textContent=`R$ ${currency(totalReceitas)}`;
-  totalGastosEl.textContent=`R$ ${currency(totalGastos)}`;
-  totalDividasEl.textContent=`R$ ${currency(totalDividas)}`;
-  totalLucrosEl.textContent=`R$ ${currency(totalLucros)}`;
-  saldoEl.textContent=currency(saldo);
-  saldoEl.style.color=saldo>=0?'var(--positive)':'var(--negative)';
-  salarioValorEl.textContent=currency(dados.salario);
-
-  // Tabela (exibir últimas 20 transações)
-  tabelaEl.innerHTML='';
-  const todas=[...dados.gastos.map(it=>({...it,tipo:'gasto'})),...dados.receitas.map(it=>({...it,tipo:'receita'})),...dados.dividas.map(it=>({...it,tipo:'divida'})),...dados.lucros.map(it=>({...it,tipo:'lucro'}))];
-  todas.sort((a,b)=>b.id.localeCompare(a.id));
-  todas.slice(0,20).forEach((t,idx)=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${idx+1}</td>
-      <td class="tbl-type">${t.tipo}</td>
-      <td class="tbl-cat">${t.categoria}</td>
-      <td>${t.descricao}</td>
-      <td class="tbl-amt ${t.tipo==='gasto'||t.tipo==='divida'?'negativo':'positivo'}">${currency(t.valor)}</td>
-      <td><button class="btn-del" onclick="removerPorId('${t.id}')">❌</button></td>`;
-    tabelaEl.appendChild(tr);
-  });
-
-  // Atualiza gráfico principal
-  const dadosGrafico = categoriesList.map(cat => dados.gastos.filter(g=>g.categoria===cat).reduce((s,i)=>s+i.valor,0));
-  dadosGrafico.push(totalDividas, totalLucros, saldo>0?saldo:0);
-  grafico.data.datasets[0].data = dadosGrafico;
-  grafico.update();
-
-  // Atualiza gráfico salário
-  graficoSalario.data.datasets[0].data = [totalGastos, totalReceitas, totalDividas, totalLucros];
-  graficoSalario.update();
-
-  // Quebra por categoria
-  const breakdownEl=document.getElementById('categoryBreakdown');
-  breakdownEl.innerHTML='';
-  categoriesList.forEach((c,i)=>{
-    const valor = dados.gastos.filter(g=>g.categoria===c).reduce((s,g)=>s+g.valor,0);
-    if(valor>0){
-      const div=document.createElement('div');
-      div.className='category-item';
-      div.innerHTML=`<div class="category-name"><span class="dot" style="background-color:${graficoColors[i]}"></span>${c}</div><div>R$ ${currency(valor)}</div>`;
-      breakdownEl.appendChild(div);
+    function definirSalario(){
+      const salario=parseFloat(document.getElementById("salario").value);
+      if(isNaN(salario)||salario<=0){alert("Digite um valor válido para o salário!");return;}
+      dados.salario=salario;
+      atualizar();
+      document.getElementById("salario").value="";
     }
-  });
-}
 
-atualizar();
-</script>
+    function adicionar(){
+      const tipo=document.getElementById("tipo").value;
+      const categoria=document.getElementById("categoria").value;
+      const descricao=document.getElementById("descricao").value.trim();
+      const valor=parseFloat(document.getElementById("valor").value);
+      if(descricao===""||isNaN(valor)||valor<=0){alert("Preencha os campos corretamente!");return;}
+      dados[tipo==="gasto"?"gastos":"receitas"].push({descricao,valor,categoria});
+      document.getElementById("descricao").value="";
+      document.getElementById("valor").value="";
+      atualizar();
+    }
+
+    function atualizar(){
+      listaEl.innerHTML="";
+      let totalGastos=0,totalReceitas=0;
+      let categoriasValores=Object.fromEntries(Object.keys(coresCategorias).map(k=>[k,0]));
+
+      dados.gastos.forEach((g,i)=>{
+        totalGastos+=g.valor;
+        categoriasValores[g.categoria]+=g.valor;
+        const li=document.createElement("li");
+        li.className="fade-in";
+        li.innerHTML=`<span>💸 <strong>${g.categoria}</strong>: ${g.descricao} - R$ ${g.valor.toFixed(2)}</span>
+          <button class="delete-btn" onclick="remover('gasto',${i})">X</button>`;
+        listaEl.appendChild(li);
+      });
+
+      dados.receitas.forEach((r,i)=>{
+        totalReceitas+=r.valor;
+        const li=document.createElement("li");
+        li.className="fade-in";
+        li.innerHTML=`<span>💵 <strong>Receita</strong>: ${r.descricao} - R$ ${r.valor.toFixed(2)}</span>
+          <button class="delete-btn" onclick="remover('receita',${i})">X</button>`;
+        listaEl.appendChild(li);
+      });
+
+      if(dados.gastos.length===0&&dados.receitas.length===0){
+        const emptyDiv=document.createElement("div");
+        emptyDiv.className="empty-state";
+        emptyDiv.innerHTML=`<div class="empty-state-icon">📊</div><div class="empty-state-text">Nenhuma transação ainda</div>`;
+        listaEl.appendChild(emptyDiv);
+      }
+
+      const saldo=totalReceitas-totalGastos;
+      saldoEl.textContent=saldo.toFixed(2);
+      saldoEl.style.color=saldo>=0?"#28a745":"#dc3545";
+
+      document.getElementById("totalReceitas").textContent=`R$ ${totalReceitas.toFixed(2)}`;
+      document.getElementById("totalGastos").textContent=`R$ ${totalGastos.toFixed(2)}`;
+      document.getElementById("economia").textContent=`${totalReceitas>0?((saldo/totalReceitas)*100).toFixed(1):0}%`;
+
+      const maxValor=Math.max(totalReceitas,totalGastos,dados.salario);
+      document.getElementById("progressReceitas").style.width=maxValor>0?`${(totalReceitas/maxValor)*100}%`:"0%";
+      document.getElementById("progressGastos").style.width=maxValor>0?`${(totalGastos/maxValor)*100}%`:"0%";
+
+      let dadosGrafico=Object.values(categoriasValores);
+      dadosGrafico.push(saldo>0?saldo:0);
+      grafico.data.datasets[0].data=dadosGrafico;
+      grafico.update();
+
+      const breakdownEl=document.getElementById("categoryBreakdown");
+      breakdownEl.innerHTML="";
+      Object.entries(categoriasValores).forEach(([cat,val])=>{
+        if(val>0){
+          const itemDiv=document.createElement("div");
+          itemDiv.className="category-item";
+          const percentual=totalReceitas>0?((val/totalReceitas)*100).toFixed(1):0;
+          itemDiv.innerHTML=`<div class="category-name"><span class="color-dot" style="background:${coresCategorias[cat]}"></span>${cat}</div>
+          <div class="category-amount">R$ ${val.toFixed(2)} (${percentual}%)</div>`;
+          breakdownEl.appendChild(itemDiv);
+        }
+      });
+
+      salarioValorEl.textContent=dados.salario.toFixed(2);
+      const disponivel=dados.salario-totalGastos+totalReceitas;
+      graficoSalario.data.datasets[0].data=[totalGastos,totalReceitas,Math.max(0,disponivel)];
+      graficoSalario.update();
+    }
+
+    function remover(tipo,index){
+      if(confirm("Deseja realmente apagar este item?")){
+        dados[tipo==="gasto"?"gastos":"receitas"].splice(index,1);
+        atualizar();
+      }
+    }
+
+    function resetApp(){
+      if(confirm("Tem certeza que deseja resetar todos os dados?")){
+        dados={gastos:[],receitas:[],salario:0};
+        atualizar();
+      }
+    }
+
+    atualizar();
+  </script>
 </body>
 </html>

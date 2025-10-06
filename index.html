@@ -3,340 +3,1012 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>💰 FinanceFlow - Controle Financeiro</title>
+  <meta name="description" content="FinanceFlow - Controle Financeiro Completo">
+  <title>FinanceFlow - Controle Financeiro</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #0077b6;
+      --primary-dark: #005a8d;
+      --primary-light: #00a8e8;
+      --success: #28a745;
+      --warning: #ffc107;
+      --danger: #dc3545;
+      --info: #17a2b8;
+      --neutral-50: #f8f9fa;
+      --neutral-100: #f1f3f5;
+      --neutral-200: #e9ecef;
+      --neutral-400: #6c757d;
+      --neutral-800: #212529;
+      --white: #ffffff;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 119, 182, 0.08);
+      --shadow-lg: 0 8px 24px rgba(0, 119, 182, 0.12);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --transition: all 0.3s ease;
+    }
+
+    body {
       background: linear-gradient(135deg, #f4f7fb 0%, #e8f0f7 100%);
-      font-family: "Segoe UI", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 24px 16px;
+      min-height: 100vh;
+      color: var(--neutral-800);
+      line-height: 1.6;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1400px;
+      background: var(--white);
+      border-radius: 24px;
+      box-shadow: var(--shadow-md);
+      padding: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 8px;
+      color: var(--primary);
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--neutral-400);
+      font-size: 0.95rem;
+      margin-bottom: 32px;
+      font-weight: 400;
+    }
+
+    /* FORMULÁRIOS */
+    .form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+      background: var(--neutral-50);
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form input,
+    .form select {
+      padding: 12px 16px;
+      border: 2px solid var(--neutral-200);
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      transition: var(--transition);
+      background: var(--white);
+      font-family: inherit;
+    }
+
+    .form input:focus,
+    .form select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.1);
+    }
+
+    .form button {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 12px 20px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: var(--transition);
+      box-shadow: 0 4px 12px rgba(0, 119, 182, 0.2);
+      font-family: inherit;
+    }
+
+    .form button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 119, 182, 0.3);
+    }
+
+    .reset-btn {
+      background: linear-gradient(135deg, var(--danger) 0%, #c82333 100%) !important;
+      box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2) !important;
+    }
+
+    /* ABAS DE NAVEGAÇÃO */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      border-bottom: 2px solid var(--neutral-100);
+      overflow-x: auto;
+    }
+
+    .tab-button {
+      padding: 12px 24px;
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--neutral-400);
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .tab-button:hover {
+      color: var(--primary);
+      background: var(--neutral-50);
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+    }
+
+    .tab-button.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* CARDS DE ESTATÍSTICAS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--white);
+      padding: 20px;
+      border-radius: var(--radius-lg);
+      text-align: center;
+      border: 2px solid var(--neutral-100);
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stat-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.75rem;
+      color: var(--neutral-400);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-card .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--neutral-800);
+    }
+
+    .stat-card.positive .stat-value { color: var(--success); }
+    .stat-card.negative .stat-value { color: var(--danger); }
+    .stat-card.neutral .stat-value { color: var(--primary); }
+    .stat-card.warning .stat-value { color: var(--warning); }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: var(--neutral-200);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+      transition: width 0.5s ease;
+      border-radius: 10px;
+    }
+
+    /* DASHBOARD */
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: var(--white);
+      padding: 28px;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--neutral-100);
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    .card h2 {
+      font-size: 1.25rem;
+      color: var(--neutral-800);
+      margin-bottom: 20px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* LISTA DE ITENS */
+    ul {
+      list-style: none;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    ul::-webkit-scrollbar { width: 6px; }
+    ul::-webkit-scrollbar-track { background: var(--neutral-100); border-radius: 10px; }
+    ul::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+    li {
+      padding: 12px 8px;
+      border-bottom: 1px solid var(--neutral-100);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.95rem;
+      color: var(--neutral-800);
+      transition: background 0.2s ease;
+      border-radius: var(--radius-sm);
+    }
+
+    li:hover { background: var(--neutral-50); }
+
+    .item-info {
+      flex: 1;
       display: flex;
       flex-direction: column;
+      gap: 4px;
+    }
+
+    .item-title {
+      font-weight: 600;
+    }
+
+    .item-detail {
+      font-size: 0.85rem;
+      color: var(--neutral-400);
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 8px;
       align-items: center;
-      padding: 30px 20px;
-      min-height: 100vh;
     }
-    .container{
-      width: 100%;
-      max-width: 1200px;
-      background:#fff;
-      border-radius:24px;
-      box-shadow:0 10px 40px rgba(0,119,182,0.08);
-      padding:40px;
-      display:flex;
-      flex-direction:column;
-      gap:32px;
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
     }
-    h1{text-align:center;margin-bottom:10px;color:#0077b6;font-size:2.5em;font-weight:600;letter-spacing:-0.5px;}
-    .subtitle{text-align:center;color:#6c757d;font-size:0.95em;margin-bottom:40px;font-weight:400;}
-    .form{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-      gap:12px;
-      margin-bottom:40px;
-      background:#f8f9fa;
-      padding:24px;
-      border-radius:16px;
-      box-shadow:0 2px 8px rgba(0,0,0,0.04);
+
+    .badge.paid {
+      background: #d4edda;
+      color: #155724;
     }
-    .form input, .form select{
-      padding:12px 16px;
-      border:2px solid #e9ecef;
-      border-radius:12px;
-      font-size:0.95em;
-      transition: all 0.3s ease;
-      background:white;
+
+    .badge.pending {
+      background: #fff3cd;
+      color: #856404;
     }
-    .form input:focus, .form select:focus{
-      outline:none;
-      border-color:#0077b6;
-      box-shadow:0 0 0 3px rgba(0,119,182,0.1);
+
+    .badge.received {
+      background: #d1ecf1;
+      color: #0c5460;
     }
-    .form button{
-      background: linear-gradient(135deg, #0077b6 0%, #005a8d 100%);
-      color:white;
-      border:none;
-      border-radius:12px;
-      padding:12px 20px;
-      cursor:pointer;
-      font-weight:600;
-      font-size:0.95em;
-      transition:all 0.3s ease;
-      box-shadow:0 4px 12px rgba(0,119,182,0.2);
+
+    .badge.expected {
+      background: #e2e3e5;
+      color: #383d41;
     }
-    .form button:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,119,182,0.3);}
-    .reset-btn{
-      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
-      box-shadow:0 4px 12px rgba(220,53,69,0.2) !important;
+
+    .btn {
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: var(--transition);
+      font-family: inherit;
     }
-    .reset-btn:hover{box-shadow:0 6px 20px rgba(220,53,69,0.3) !important;}
-    .dashboard{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;}
-    .salary-section{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
-    .card{
-      background:#fff;
-      padding:28px;
-      border-radius:20px;
-      box-shadow:0 4px 20px rgba(0,0,0,0.06);
-      border:1px solid #f1f3f5;
-      transition:all 0.3s ease;
+
+    .btn-success {
+      background: var(--success);
+      color: var(--white);
     }
-    .card:hover{box-shadow:0 8px 30px rgba(0,119,182,0.12);transform:translateY(-2px);}
-    .card h2{font-size:1.3em;color:#212529;margin-bottom:20px;font-weight:600;display:flex;align-items:center;gap:8px;}
-    ul{list-style:none;max-height:400px;overflow-y:auto;}
-    ul::-webkit-scrollbar{width:6px;}
-    ul::-webkit-scrollbar-track{background:#f1f3f5;border-radius:10px;}
-    ul::-webkit-scrollbar-thumb{background:#0077b6;border-radius:10px;}
-    li{padding:12px 0;border-bottom:1px solid #f1f3f5;display:flex;justify-content:space-between;align-items:center;font-size:0.95em;color:#495057;transition:background 0.2s ease;}
-    li:hover{background:#f8f9fa;padding-left:8px;border-radius:8px;}
-    .delete-btn{
-      background:#dc3545;color:#fff;border:none;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:11px;font-weight:600;transition:all 0.2s ease;opacity:0.8;
+
+    .btn-danger {
+      background: var(--danger);
+      color: var(--white);
     }
-    .delete-btn:hover{opacity:1;transform:scale(1.05);}
-    .total{font-weight:600;margin-top:16px;padding-top:16px;border-top:2px solid #0077b6;color:#0077b6;font-size:1.2em;}
-    .salary-input{display:flex;gap:12px;margin-bottom:20px;}
-    .salary-input input{flex:1;padding:12px 16px;border:2px solid #e9ecef;border-radius:12px;font-size:0.95em;}
-    .salary-input button{
-      background: linear-gradient(135deg, #28a745 0%, #218838 100%);
-      color:white;border:none;border-radius:12px;padding:12px 24px;cursor:pointer;font-weight:600;transition:all 0.3s ease;box-shadow:0 4px 12px rgba(40,167,69,0.2);
+
+    .btn-info {
+      background: var(--info);
+      color: var(--white);
     }
-    .salary-input button:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(40,167,69,0.3);}
-    .salary-display{
-      background: linear-gradient(135deg, #e7f5ff 0%, #d0ebff 100%);
-      padding:20px;
-      border-radius:16px;
-      margin-bottom:20px;
-      border-left:4px solid #0077b6;
+
+    .btn:hover {
+      opacity: 0.9;
+      transform: scale(1.05);
     }
-    .salary-display .label{font-size:0.85em;color:#0077b6;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;}
-    .salary-display .value{font-size:2em;color:#0077b6;font-weight:700;}
-    .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px;margin-bottom:24px;}
-    .stat-card{background:white;padding:16px;border-radius:12px;text-align:center;border:2px solid #f1f3f5;transition:all 0.3s ease;}
-    .stat-card:hover{border-color:#0077b6;transform:translateY(-2px);}
-    .stat-card .stat-label{font-size:0.75em;color:#6c757d;text-transform:uppercase;font-weight:600;margin-bottom:8px;letter-spacing:0.5px;}
-    .stat-card .stat-value{font-size:1.5em;font-weight:700;color:#212529;}
-    .stat-card.positive .stat-value{color:#28a745;}
-    .stat-card.negative .stat-value{color:#dc3545;}
-    .stat-card.neutral .stat-value{color:#0077b6;}
-    .progress-bar{width:100%;height:8px;background:#e9ecef;border-radius:10px;overflow:hidden;margin-top:8px;}
-    .progress-fill{height:100%;background: linear-gradient(90deg, #0077b6 0%, #00a8e8 100%);transition: width 0.5s ease;border-radius:10px;}
-    .category-breakdown{margin-top:20px;}
-    .category-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f1f3f5;}
-    .category-item .category-name{display:flex;align-items:center;gap:8px;font-size:0.9em;font-weight:500;}
-    .category-item .category-amount{font-weight:600;color:#0077b6;}
-    .color-dot{width:12px;height:12px;border-radius:50%;display:inline-block;}
-    .small-chart-container{position:relative;height:200px;}
-    .empty-state{text-align:center;padding:40px 20px;color:#6c757d;}
-    .empty-state-icon{font-size:4em;margin-bottom:16px;opacity:0.3;}
-    .empty-state-text{font-size:1.1em;font-weight:500;}
-    .fade-in{animation: fadeIn 0.5s ease-in;}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-    @media(max-width:968px){.dashboard,.salary-section{grid-template-columns:1fr}.stats-grid{grid-template-columns:1fr;}}
-    @media(max-width:768px){.container{padding:24px;}h1{font-size:2em;}.form{grid-template-columns:1fr;}.stats-grid{grid-template-columns:1fr;}}
+
+    .total {
+      font-weight: 600;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 2px solid var(--primary);
+      color: var(--primary);
+      font-size: 1.25rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--neutral-400);
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+      opacity: 0.3;
+    }
+
+    .empty-state-text {
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.4s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVIDADE */
+    @media (max-width: 768px) {
+      .container { padding: 24px 16px; }
+      h1 { font-size: 2rem; }
+      .form { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .dashboard { grid-template-columns: 1fr; }
+      .tabs { flex-wrap: nowrap; }
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>💰 FinanceFlow</h1>
-    <div class="subtitle">Controle Financeiro Inteligente</div>
+    <div class="subtitle">Controle Financeiro Completo</div>
 
-    <div class="form">
-      <select id="tipo">
-        <option value="gasto">💸 Gasto</option>
-        <option value="receita">💵 Receita</option>
-      </select>
-      <select id="categoria">
-        <option value="Abundar">Abundar</option>
-        <option value="Doar">Doar</option>
-        <option value="Investir">Investir</option>
-        <option value="Educar">Educar</option>
-        <option value="Desfrutar">Desfrutar</option>
-        <option value="Conquistar">Conquistar</option>
-        <option value="Sustentar">Sustentar</option>
-        <option value="Bug">Bug</option>
-      </select>
-      <input type="text" id="descricao" placeholder="Descrição da transação">
-      <input type="number" id="valor" placeholder="Valor (R$)" step="0.01">
-      <button onclick="adicionar()">➕ Adicionar</button>
-      <button class="reset-btn" onclick="resetApp()">🗑️ Resetar</button>
+    <!-- NAVEGAÇÃO POR ABAS -->
+    <div class="tabs">
+      <button class="tab-button active" onclick="mudarAba('transacoes')">📊 Transações</button>
+      <button class="tab-button" onclick="mudarAba('dividas')">💳 Dívidas</button>
+      <button class="tab-button" onclick="mudarAba('lucros')">💎 Lucros</button>
+      <button class="tab-button" onclick="mudarAba('salario')">💼 Salário</button>
     </div>
 
-    <div class="stats-grid">
-      <div class="stat-card positive">
-        <div class="stat-label">💵 Total Receitas</div>
-        <div class="stat-value" id="totalReceitas">R$ 0,00</div>
-        <div class="progress-bar"><div class="progress-fill" id="progressReceitas" style="width:0%"></div></div>
+    <!-- ABA: TRANSAÇÕES -->
+    <div id="tab-transacoes" class="tab-content active">
+      <div class="form">
+        <select id="tipo">
+          <option value="gasto">💸 Gasto</option>
+          <option value="receita">💵 Receita</option>
+        </select>
+        <select id="categoria">
+          <option value="Abundar">Abundar</option>
+          <option value="Doar">Doar</option>
+          <option value="Investir">Investir</option>
+          <option value="Educar">Educar</option>
+          <option value="Desfrutar">Desfrutar</option>
+          <option value="Conquistar">Conquistar</option>
+          <option value="Sustentar">Sustentar</option>
+          <option value="Bug">Bug</option>
+        </select>
+        <input type="text" id="descricao" placeholder="Descrição">
+        <input type="number" id="valor" placeholder="Valor (R$)" step="0.01">
+        <button onclick="adicionarTransacao()">➕ Adicionar</button>
+        <button class="reset-btn" onclick="resetApp()">🗑️ Resetar</button>
       </div>
-      <div class="stat-card negative">
-        <div class="stat-label">💸 Total Gastos</div>
-        <div class="stat-value" id="totalGastos">R$ 0,00</div>
-        <div class="progress-bar"><div class="progress-fill" id="progressGastos" style="width:0%;background: linear-gradient(90deg,#dc3545 0%,#ff6b7a 100%)"></div></div>
-      </div>
-      <div class="stat-card neutral">
-        <div class="stat-label">💰 Economia</div>
-        <div class="stat-value" id="economia">0%</div>
-      </div>
-    </div>
 
-    <div class="dashboard">
-      <div class="card">
-        <h2>📊 Distribuição da Receita</h2>
-        <canvas id="grafico"></canvas>
-        <div class="category-breakdown" id="categoryBreakdown"></div>
-      </div>
-      <div class="card">
-        <h2>📝 Transações</h2>
-        <ul id="lista"></ul>
-        <div class="total">Saldo: R$ <span id="saldo">0.00</span></div>
-      </div>
-    </div>
-
-    <div class="salary-section">
-      <div class="card">
-        <h2>💼 Salário Mensal</h2>
-        <div class="salary-input">
-          <input type="number" id="salario" placeholder="Digite seu salário mensal" step="0.01">
-          <button onclick="definirSalario()">Definir</button>
+      <div class="stats-grid">
+        <div class="stat-card positive">
+          <div class="stat-label">💵 Total Receitas</div>
+          <div class="stat-value" id="totalReceitas">R$ 0,00</div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressReceitas" style="width: 0%"></div>
+          </div>
         </div>
-        <div class="salary-display">
-          <div class="label">Salário Disponível</div>
-          <div class="value">R$ <span id="salarioValor">0.00</span></div>
+        <div class="stat-card negative">
+          <div class="stat-label">💸 Total Gastos</div>
+          <div class="stat-value" id="totalGastos">R$ 0,00</div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressGastos" style="width: 0%; background: linear-gradient(90deg, #dc3545 0%, #ff6b7a 100%)"></div>
+          </div>
+        </div>
+        <div class="stat-card neutral">
+          <div class="stat-label">💰 Saldo Atual</div>
+          <div class="stat-value" id="saldoAtual">R$ 0,00</div>
         </div>
       </div>
-      <div class="card">
-        <h2>📈 Uso do Salário</h2>
-        <div class="small-chart-container"><canvas id="graficoSalario"></canvas></div>
+
+      <div class="dashboard">
+        <div class="card">
+          <h2>📊 Distribuição por Categoria</h2>
+          <canvas id="graficoTransacoes"></canvas>
+        </div>
+        <div class="card">
+          <h2>📝 Histórico</h2>
+          <ul id="listaTransacoes"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA: DÍVIDAS -->
+    <div id="tab-dividas" class="tab-content">
+      <div class="form">
+        <input type="text" id="dividaNome" placeholder="Nome da dívida">
+        <input type="number" id="dividaValor" placeholder="Valor (R$)" step="0.01">
+        <input type="date" id="dividaVencimento">
+        <input type="text" id="dividaCredor" placeholder="Credor">
+        <button onclick="adicionarDivida()">➕ Adicionar Dívida</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card negative">
+          <div class="stat-label">💳 Dívidas Pendentes</div>
+          <div class="stat-value" id="totalDividasPendentes">R$ 0,00</div>
+        </div>
+        <div class="stat-card positive">
+          <div class="stat-label">✅ Dívidas Pagas</div>
+          <div class="stat-value" id="totalDividasPagas">R$ 0,00</div>
+        </div>
+        <div class="stat-card warning">
+          <div class="stat-label">⏰ Vencendo Hoje</div>
+          <div class="stat-value" id="dividasVencendo">0</div>
+        </div>
+      </div>
+
+      <div class="dashboard">
+        <div class="card">
+          <h2>📈 Status das Dívidas</h2>
+          <canvas id="graficoDividas"></canvas>
+        </div>
+        <div class="card">
+          <h2>💳 Lista de Dívidas</h2>
+          <ul id="listaDividas"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA: LUCROS -->
+    <div id="tab-lucros" class="tab-content">
+      <div class="form">
+        <input type="text" id="lucroFonte" placeholder="Fonte do lucro">
+        <input type="number" id="lucroValor" placeholder="Valor (R$)" step="0.01">
+        <input type="date" id="lucroData">
+        <select id="lucroStatus">
+          <option value="esperado">Esperado</option>
+          <option value="recebido">Recebido</option>
+        </select>
+        <button onclick="adicionarLucro()">➕ Adicionar Lucro</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card positive">
+          <div class="stat-label">💎 Lucros Recebidos</div>
+          <div class="stat-value" id="totalLucrosRecebidos">R$ 0,00</div>
+        </div>
+        <div class="stat-card neutral">
+          <div class="stat-label">⏳ Lucros Esperados</div>
+          <div class="stat-value" id="totalLucrosEsperados">R$ 0,00</div>
+        </div>
+        <div class="stat-card warning">
+          <div class="stat-label">📊 Taxa de Realização</div>
+          <div class="stat-value" id="taxaRealizacao">0%</div>
+        </div>
+      </div>
+
+      <div class="dashboard">
+        <div class="card">
+          <h2>💰 Distribuição de Lucros</h2>
+          <canvas id="graficoLucros"></canvas>
+        </div>
+        <div class="card">
+          <h2>💎 Lista de Lucros</h2>
+          <ul id="listaLucros"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA: SALÁRIO -->
+    <div id="tab-salario" class="tab-content">
+      <div class="form">
+        <input type="number" id="salario" placeholder="Salário mensal (R$)" step="0.01">
+        <button onclick="definirSalario()">💼 Definir Salário</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card neutral">
+          <div class="stat-label">💼 Salário Mensal</div>
+          <div class="stat-value" id="salarioMensal">R$ 0,00</div>
+        </div>
+        <div class="stat-card negative">
+          <div class="stat-label">💸 Total Comprometido</div>
+          <div class="stat-value" id="totalComprometido">R$ 0,00</div>
+        </div>
+        <div class="stat-card positive">
+          <div class="stat-label">💰 Disponível</div>
+          <div class="stat-value" id="salarioDisponivel">R$ 0,00</div>
+        </div>
+      </div>
+
+      <div class="dashboard">
+        <div class="card">
+          <h2>📊 Uso do Salário</h2>
+          <canvas id="graficoSalario"></canvas>
+        </div>
+        <div class="card">
+          <h2>📈 Resumo Financeiro</h2>
+          <div style="padding: 20px;">
+            <div style="margin-bottom: 16px;">
+              <strong>Receita Total:</strong> <span id="resumoReceita">R$ 0,00</span>
+            </div>
+            <div style="margin-bottom: 16px;">
+              <strong>Gastos Totais:</strong> <span id="resumoGastos">R$ 0,00</span>
+            </div>
+            <div style="margin-bottom: 16px;">
+              <strong>Dívidas Pendentes:</strong> <span id="resumoDividas">R$ 0,00</span>
+            </div>
+            <div style="margin-bottom: 16px;">
+              <strong>Lucros Esperados:</strong> <span id="resumoLucros">R$ 0,00</span>
+            </div>
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #0077b6; font-size: 1.2rem;">
+              <strong>Saldo Final:</strong> <span id="saldoFinal" style="color: #0077b6;">R$ 0,00</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    const listaEl = document.getElementById("lista");
-    const saldoEl = document.getElementById("saldo");
-    const salarioValorEl = document.getElementById("salarioValor");
+    // ========== DADOS DA APLICAÇÃO ==========
+    let dados = {
+      gastos: [],
+      receitas: [],
+      dividas: [],
+      lucros: [],
+      salario: 0
+    };
 
-    let dados = { gastos:[], receitas:[], salario:0 };
+    // ========== CONFIGURAÇÕES ==========
+    const coresCategorias = {
+      Abundar: "#264653", Doar: "#2a9d8f", Investir: "#e9c46a", Educar: "#f4a261",
+      Desfrutar: "#e76f51", Conquistar: "#6a4c93", Sustentar: "#0077b6", Bug: "#90e0ef"
+    };
 
-    const coresCategorias = { Abundar:"#264653",Doar:"#2a9d8f",Investir:"#e9c46a",Educar:"#f4a261",Desfrutar:"#e76f51",Conquistar:"#6a4c93",Sustentar:"#0077b6",Bug:"#90e0ef" };
+    const configGrafico = {
+      type: "doughnut",
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: { position: "bottom", labels: { padding: 12, font: { size: 11 }, usePointStyle: true } },
+          tooltip: {
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            padding: 12,
+            cornerRadius: 8,
+            callbacks: {
+              label: function(ctx) {
+                let total = ctx.dataset.data.reduce((a,b) => a+b, 0);
+                let valor = ctx.raw;
+                let pct = total > 0 ? ((valor/total)*100).toFixed(1) : 0;
+                return `${ctx.label}: R$ ${valor.toFixed(2)} (${pct}%)`;
+              }
+            }
+          }
+        },
+        animation: { duration: 800 }
+      }
+    };
 
-    const grafico = new Chart(document.getElementById("grafico").getContext("2d"),{
-      type:"doughnut",
-      data:{
-        labels: Object.keys(coresCategorias).concat("Sobra"),
-        datasets:[{ data:Array(9).fill(0), backgroundColor:Object.values(coresCategorias).concat("#06d6a0"), borderWidth:2, borderColor:"#fff" }]
-      },
-      options:{
-        responsive:true,
-        plugins:{ legend:{ position:"bottom", labels:{ padding:15, font:{ size:11 }, usePointStyle:true, pointStyle:"circle" } }, tooltip:{ backgroundColor:'rgba(0,0,0,0.8)', padding:12, cornerRadius:8, callbacks:{ label:function(ctx){ let total = ctx.dataset.data.reduce((a,b)=>a+b,0); let valor=ctx.raw; let pct = total?((valor/total)*100).toFixed(1):0; return `${ctx.label}: R$ ${valor.toFixed(2)} (${pct}%)`; }}}}
+    // ========== GRÁFICOS ==========
+    const graficoTransacoes = new Chart(document.getElementById("graficoTransacoes").getContext("2d"), {
+      ...configGrafico,
+      data: {
+        labels: Object.keys(coresCategorias),
+        datasets: [{ data: Array(8).fill(0), backgroundColor: Object.values(coresCategorias), borderWidth: 2, borderColor: "#fff" }]
       }
     });
 
-    const graficoSalario = new Chart(document.getElementById("graficoSalario").getContext("2d"),{
-      type:"doughnut",
-      data:{ labels:["Gastos","Receitas","Disponível"], datasets:[{ data:[0,0,0], backgroundColor:["#dc3545","#28a745","#0077b6"], borderWidth:2, borderColor:"#fff" }]},
-      options:{ responsive:true, plugins:{ legend:{ position:"bottom", labels:{ padding:12, font:{ size:11 }, usePointStyle:true, pointStyle:"circle" } }, tooltip:{ backgroundColor:'rgba(0,0,0,0.8)', padding:12, cornerRadius:8, callbacks:{ label:function(ctx){ let total=ctx.dataset.data.reduce((a,b)=>a+b,0); let valor=ctx.raw; let pct=total?((valor/total)*100).toFixed(1):0; return `${ctx.label}: R$ ${valor.toFixed(2)} (${pct}%)`; }}}} }
+    const graficoDividas = new Chart(document.getElementById("graficoDividas").getContext("2d"), {
+      ...configGrafico,
+      data: {
+        labels: ["Pagas", "Pendentes"],
+        datasets: [{ data: [0, 0], backgroundColor: ["#28a745", "#dc3545"], borderWidth: 2, borderColor: "#fff" }]
+      }
     });
 
-    function definirSalario(){
-      const salario=parseFloat(document.getElementById("salario").value);
-      if(isNaN(salario)||salario<=0){alert("Digite um valor válido para o salário!");return;}
-      dados.salario=salario;
-      atualizar();
-      document.getElementById("salario").value="";
+    const graficoLucros = new Chart(document.getElementById("graficoLucros").getContext("2d"), {
+      ...configGrafico,
+      data: {
+        labels: ["Recebidos", "Esperados"],
+        datasets: [{ data: [0, 0], backgroundColor: ["#28a745", "#17a2b8"], borderWidth: 2, borderColor: "#fff" }]
+      }
+    });
+
+    const graficoSalario = new Chart(document.getElementById("graficoSalario").getContext("2d"), {
+      ...configGrafico,
+      data: {
+        labels: ["Gastos", "Dívidas", "Disponível"],
+        datasets: [{ data: [0, 0, 0], backgroundColor: ["#dc3545", "#ffc107", "#28a745"], borderWidth: 2, borderColor: "#fff" }]
+      }
+    });
+
+    // ========== FUNÇÕES UTILITÁRIAS ==========
+    function fmt(valor) { return valor.toFixed(2).replace('.', ','); }
+    
+    function obterDataHoje() {
+      const hoje = new Date();
+      return hoje.toISOString().split('T')[0];
     }
 
-    function adicionar(){
-      const tipo=document.getElementById("tipo").value;
-      const categoria=document.getElementById("categoria").value;
-      const descricao=document.getElementById("descricao").value.trim();
-      const valor=parseFloat(document.getElementById("valor").value);
-      if(descricao===""||isNaN(valor)||valor<=0){alert("Preencha os campos corretamente!");return;}
-      dados[tipo==="gasto"?"gastos":"receitas"].push({descricao,valor,categoria});
-      document.getElementById("descricao").value="";
-      document.getElementById("valor").value="";
-      atualizar();
+    // ========== NAVEGAÇÃO ==========
+    function mudarAba(aba) {
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      document.getElementById(`tab-${aba}`).classList.add('active');
     }
 
-    function atualizar(){
-      listaEl.innerHTML="";
-      let totalGastos=0,totalReceitas=0;
-      let categoriasValores=Object.fromEntries(Object.keys(coresCategorias).map(k=>[k,0]));
+    // ========== TRANSAÇÕES ==========
+    function adicionarTransacao() {
+      const tipo = document.getElementById("tipo").value;
+      const categoria = document.getElementById("categoria").value;
+      const descricao = document.getElementById("descricao").value.trim();
+      const valor = parseFloat(document.getElementById("valor").value);
 
-      dados.gastos.forEach((g,i)=>{
-        totalGastos+=g.valor;
-        categoriasValores[g.categoria]+=g.valor;
-        const li=document.createElement("li");
-        li.className="fade-in";
-        li.innerHTML=`<span>💸 <strong>${g.categoria}</strong>: ${g.descricao} - R$ ${g.valor.toFixed(2)}</span>
-          <button class="delete-btn" onclick="remover('gasto',${i})">X</button>`;
-        listaEl.appendChild(li);
-      });
-
-      dados.receitas.forEach((r,i)=>{
-        totalReceitas+=r.valor;
-        const li=document.createElement("li");
-        li.className="fade-in";
-        li.innerHTML=`<span>💵 <strong>Receita</strong>: ${r.descricao} - R$ ${r.valor.toFixed(2)}</span>
-          <button class="delete-btn" onclick="remover('receita',${i})">X</button>`;
-        listaEl.appendChild(li);
-      });
-
-      if(dados.gastos.length===0&&dados.receitas.length===0){
-        const emptyDiv=document.createElement("div");
-        emptyDiv.className="empty-state";
-        emptyDiv.innerHTML=`<div class="empty-state-icon">📊</div><div class="empty-state-text">Nenhuma transação ainda</div>`;
-        listaEl.appendChild(emptyDiv);
+      if (!descricao || isNaN(valor) || valor <= 0) {
+        alert("⚠️ Preencha todos os campos corretamente!");
+        return;
       }
 
-      const saldo=totalReceitas-totalGastos;
-      saldoEl.textContent=saldo.toFixed(2);
-      saldoEl.style.color=saldo>=0?"#28a745":"#dc3545";
+      const transacao = { descricao, valor, categoria, data: new Date().toLocaleDateString() };
+      
+      if (tipo === "gasto") dados.gastos.push(transacao);
+      else dados.receitas.push(transacao);
 
-      document.getElementById("totalReceitas").textContent=`R$ ${totalReceitas.toFixed(2)}`;
-      document.getElementById("totalGastos").textContent=`R$ ${totalGastos.toFixed(2)}`;
-      document.getElementById("economia").textContent=`${totalReceitas>0?((saldo/totalReceitas)*100).toFixed(1):0}%`;
+      document.getElementById("descricao").value = "";
+      document.getElementById("valor").value = "";
+      atualizar();
+    }
 
-      const maxValor=Math.max(totalReceitas,totalGastos,dados.salario);
-      document.getElementById("progressReceitas").style.width=maxValor>0?`${(totalReceitas/maxValor)*100}%`:"0%";
-      document.getElementById("progressGastos").style.width=maxValor>0?`${(totalGastos/maxValor)*100}%`:"0%";
+    function removerTransacao(tipo, index) {
+      if (confirm("🗑️ Deseja realmente apagar?")) {
+        dados[tipo === "gasto" ? "gastos" : "receitas"].splice(index, 1);
+        atualizar();
+      }
+    }
 
-      let dadosGrafico=Object.values(categoriasValores);
-      dadosGrafico.push(saldo>0?saldo:0);
-      grafico.data.datasets[0].data=dadosGrafico;
-      grafico.update();
+    // ========== DÍVIDAS ==========
+    function adicionarDivida() {
+      const nome = document.getElementById("dividaNome").value.trim();
+      const valor = parseFloat(document.getElementById("dividaValor").value);
+      const vencimento = document.getElementById("dividaVencimento").value;
+      const credor = document.getElementById("dividaCredor").value.trim();
 
-      const breakdownEl=document.getElementById("categoryBreakdown");
-      breakdownEl.innerHTML="";
-      Object.entries(categoriasValores).forEach(([cat,val])=>{
-        if(val>0){
-          const itemDiv=document.createElement("div");
-          itemDiv.className="category-item";
-          const percentual=totalReceitas>0?((val/totalReceitas)*100).toFixed(1):0;
-          itemDiv.innerHTML=`<div class="category-name"><span class="color-dot" style="background:${coresCategorias[cat]}"></span>${cat}</div>
-          <div class="category-amount">R$ ${val.toFixed(2)} (${percentual}%)</div>`;
-          breakdownEl.appendChild(itemDiv);
-        }
+      if (!nome || isNaN(valor) || valor <= 0 || !vencimento) {
+        alert("⚠️ Preencha todos os campos corretamente!");
+        return;
+      }
+
+      dados.dividas.push({ nome, valor, vencimento, credor, pago: false });
+      
+      document.getElementById("dividaNome").value = "";
+      document.getElementById("dividaValor").value = "";
+      document.getElementById("dividaVencimento").value = "";
+      document.getElementById("dividaCredor").value = "";
+      atualizar();
+    }
+
+    function marcarDividaPaga(index) {
+      dados.dividas[index].pago = !dados.dividas[index].pago;
+      atualizar();
+    }
+
+    function removerDivida(index) {
+      if (confirm("🗑️ Deseja realmente apagar esta dívida?")) {
+        dados.dividas.splice(index, 1);
+        atualizar();
+      }
+    }
+
+    // ========== LUCROS ==========
+    function adicionarLucro() {
+      const fonte = document.getElementById("lucroFonte").value.trim();
+      const valor = parseFloat(document.getElementById("lucroValor").value);
+      const data = document.getElementById("lucroData").value;
+      const status = document.getElementById("lucroStatus").value;
+
+      if (!fonte || isNaN(valor) || valor <= 0 || !data) {
+        alert("⚠️ Preencha todos os campos corretamente!");
+        return;
+      }
+
+      dados.lucros.push({ fonte, valor, data, status });
+      
+      document.getElementById("lucroFonte").value = "";
+      document.getElementById("lucroValor").value = "";
+      document.getElementById("lucroData").value = "";
+      atualizar();
+    }
+
+    function alterarStatusLucro(index) {
+      dados.lucros[index].status = dados.lucros[index].status === "esperado" ? "recebido" : "esperado";
+      atualizar();
+    }
+
+    function removerLucro(index) {
+      if (confirm("🗑️ Deseja realmente apagar este lucro?")) {
+        dados.lucros.splice(index, 1);
+        atualizar();
+      }
+    }
+
+    // ========== SALÁRIO ==========
+    function definirSalario() {
+      const salario = parseFloat(document.getElementById("salario").value);
+      
+      if (isNaN(salario) || salario <= 0) {
+        alert("⚠️ Digite um valor válido!");
+        return;
+      }
+
+      dados.salario = salario;
+      document.getElementById("salario").value = "";
+      atualizar();
+    }
+
+    // ========== RESET ==========
+    function resetApp() {
+      if (confirm("⚠️ Tem certeza? Todos os dados serão apagados!")) {
+        dados = { gastos: [], receitas: [], dividas: [], lucros: [], salario: 0 };
+        atualizar();
+      }
+    }
+
+    // ========== ATUALIZAÇÃO GERAL ==========
+    function atualizar() {
+      atualizarTransacoes();
+      atualizarDividas();
+      atualizarLucros();
+      atualizarSalario();
+    }
+
+    function atualizarTransacoes() {
+      const totalGastos = dados.gastos.reduce((acc, g) => acc + g.valor, 0);
+      const totalReceitas = dados.receitas.reduce((acc, r) => acc + r.valor, 0);
+      const saldo = totalReceitas - totalGastos;
+
+      document.getElementById("totalReceitas").textContent = `R$ ${fmt(totalReceitas)}`;
+      document.getElementById("totalGastos").textContent = `R$ ${fmt(totalGastos)}`;
+      document.getElementById("saldoAtual").textContent = `R$ ${fmt(saldo)}`;
+      document.getElementById("saldoAtual").style.color = saldo >= 0 ? "#28a745" : "#dc3545";
+
+      const maxValor = Math.max(totalReceitas, totalGastos);
+      document.getElementById("progressReceitas").style.width = maxValor > 0 ? `${(totalReceitas/maxValor)*100}%` : "0%";
+      document.getElementById("progressGastos").style.width = maxValor > 0 ? `${(totalGastos/maxValor)*100}%` : "0%";
+
+      // Atualizar gráfico
+      const totalPorCategoria = {};
+      Object.keys(coresCategorias).forEach(cat => totalPorCategoria[cat] = 0);
+      dados.gastos.forEach(g => totalPorCategoria[g.categoria] += g.valor);
+      
+      graficoTransacoes.data.datasets[0].data = Object.values(totalPorCategoria);
+      graficoTransacoes.update();
+
+      // Atualizar lista
+      const lista = document.getElementById("listaTransacoes");
+      lista.innerHTML = "";
+
+      [...dados.gastos.map((g, i) => ({...g, tipo: 'gasto', index: i})),
+       ...dados.receitas.map((r, i) => ({...r, tipo: 'receita', index: i}))]
+        .sort((a, b) => new Date(b.data) - new Date(a.data))
+        .forEach(item => {
+          const li = document.createElement("li");
+          li.className = "fade-in";
+          li.innerHTML = `
+            <div class="item-info">
+              <div class="item-title">${item.tipo === 'gasto' ? '💸' : '💵'} ${item.descricao}</div>
+              <div class="item-detail">${item.categoria || 'Receita'} • ${item.data}</div>
+            </div>
+            <div class="item-actions">
+              <strong>R$ ${fmt(item.valor)}</strong>
+              <button class="btn btn-danger" onclick="removerTransacao('${item.tipo}', ${item.index})">✕</button>
+            </div>
+          `;
+          lista.appendChild(li);
+        });
+
+      if (dados.gastos.length === 0 && dados.receitas.length === 0) {
+        lista.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📊</div><div class="empty-state-text">Nenhuma transação ainda</div></div>';
+      }
+    }
+
+    function atualizarDividas() {
+      const pagas = dados.dividas.filter(d => d.pago);
+      const pendentes = dados.dividas.filter(d => !d.pago);
+      
+      const totalPagas = pagas.reduce((acc, d) => acc + d.valor, 0);
+      const totalPendentes = pendentes.reduce((acc, d) => acc + d.valor, 0);
+
+      // Verificar dívidas vencendo hoje
+      const hoje = obterDataHoje();
+      const vencendoHoje = pendentes.filter(d => d.vencimento === hoje).length;
+
+      document.getElementById("totalDividasPagas").textContent = `R$ ${fmt(totalPagas)}`;
+      document.getElementById("totalDividasPendentes").textContent = `R$ ${fmt(totalPendentes)}`;
+      document.getElementById("dividasVencendo").textContent = vencendoHoje;
+
+      // Atualizar gráfico
+      graficoDividas.data.datasets[0].data = [totalPagas, totalPendentes];
+      graficoDividas.update();
+
+      // Atualizar lista
+      const lista = document.getElementById("listaDividas");
+      lista.innerHTML = "";
+
+      dados.dividas.forEach((d, index) => {
+        const li = document.createElement("li");
+        li.className = "fade-in";
+        const dataFormatada = new Date(d.vencimento + 'T00:00:00').toLocaleDateString();
+        
+        li.innerHTML = `
+          <div class="item-info">
+            <div class="item-title">💳 ${d.nome}</div>
+            <div class="item-detail">${d.credor} • Vence: ${dataFormatada}</div>
+          </div>
+          <div class="item-actions">
+            <span class="badge ${d.pago ? 'paid' : 'pending'}">${d.pago ? 'Pago' : 'Pendente'}</span>
+            <strong>R$ ${fmt(d.valor)}</strong>
+            <button class="btn ${d.pago ? 'btn-info' : 'btn-success'}" onclick="marcarDividaPaga(${index})">
+              ${d.pago ? '↩️' : '✓'}
+            </button>
+            <button class="btn btn-danger" onclick="removerDivida(${index})">✕</button>
+          </div>
+        `;
+        lista.appendChild(li);
       });
 
-      salarioValorEl.textContent=dados.salario.toFixed(2);
-      const disponivel=dados.salario-totalGastos+totalReceitas;
-      graficoSalario.data.datasets[0].data=[totalGastos,totalReceitas,Math.max(0,disponivel)];
+      if (dados.dividas.length === 0) {
+        lista.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💳</div><div class="empty-state-text">Nenhuma dívida cadastrada</div></div>';
+      }
+    }
+
+    function atualizarLucros() {
+      const recebidos = dados.lucros.filter(l => l.status === "recebido");
+      const esperados = dados.lucros.filter(l => l.status === "esperado");
+      
+      const totalRecebidos = recebidos.reduce((acc, l) => acc + l.valor, 0);
+      const totalEsperados = esperados.reduce((acc, l) => acc + l.valor, 0);
+      const totalGeral = totalRecebidos + totalEsperados;
+      const taxa = totalGeral > 0 ? ((totalRecebidos / totalGeral) * 100) : 0;
+
+      document.getElementById("totalLucrosRecebidos").textContent = `R$ ${fmt(totalRecebidos)}`;
+      document.getElementById("totalLucrosEsperados").textContent = `R$ ${fmt(totalEsperados)}`;
+      document.getElementById("taxaRealizacao").textContent = `${taxa.toFixed(1)}%`;
+
+      // Atualizar gráfico
+      graficoLucros.data.datasets[0].data = [totalRecebidos, totalEsperados];
+      graficoLucros.update();
+
+      // Atualizar lista
+      const lista = document.getElementById("listaLucros");
+      lista.innerHTML = "";
+
+      dados.lucros.forEach((l, index) => {
+        const li = document.createElement("li");
+        li.className = "fade-in";
+        const dataFormatada = new Date(l.data + 'T00:00:00').toLocaleDateString();
+        
+        li.innerHTML = `
+          <div class="item-info">
+            <div class="item-title">💎 ${l.fonte}</div>
+            <div class="item-detail">Data: ${dataFormatada}</div>
+          </div>
+          <div class="item-actions">
+            <span class="badge ${l.status === 'recebido' ? 'received' : 'expected'}">
+              ${l.status === 'recebido' ? 'Recebido' : 'Esperado'}
+            </span>
+            <strong>R$ ${fmt(l.valor)}</strong>
+            <button class="btn ${l.status === 'recebido' ? 'btn-info' : 'btn-success'}" onclick="alterarStatusLucro(${index})">
+              ${l.status === 'recebido' ? '↩️' : '✓'}
+            </button>
+            <button class="btn btn-danger" onclick="removerLucro(${index})">✕</button>
+          </div>
+        `;
+        lista.appendChild(li);
+      });
+
+      if (dados.lucros.length === 0) {
+        lista.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💎</div><div class="empty-state-text">Nenhum lucro cadastrado</div></div>';
+      }
+    }
+
+    function atualizarSalario() {
+      const totalGastos = dados.gastos.reduce((acc, g) => acc + g.valor, 0);
+      const totalReceitas = dados.receitas.reduce((acc, r) => acc + r.valor, 0);
+      const totalDividasPendentes = dados.dividas.filter(d => !d.pago).reduce((acc, d) => acc + d.valor, 0);
+      const totalLucrosRecebidos = dados.lucros.filter(l => l.status === "recebido").reduce((acc, l) => acc + l.valor, 0);
+      const totalLucrosEsperados = dados.lucros.filter(l => l.status === "esperado").reduce((acc, l) => acc + l.valor, 0);
+
+      const comprometido = totalGastos + totalDividasPendentes;
+      const disponivel = dados.salario + totalReceitas + totalLucrosRecebidos - comprometido;
+      const saldoFinal = disponivel + totalLucrosEsperados;
+
+      document.getElementById("salarioMensal").textContent = `R$ ${fmt(dados.salario)}`;
+      document.getElementById("totalComprometido").textContent = `R$ ${fmt(comprometido)}`;
+      document.getElementById("salarioDisponivel").textContent = `R$ ${fmt(disponivel)}`;
+      document.getElementById("salarioDisponivel").style.color = disponivel >= 0 ? "#28a745" : "#dc3545";
+
+      // Resumo
+      document.getElementById("resumoReceita").textContent = `R$ ${fmt(totalReceitas + totalLucrosRecebidos)}`;
+      document.getElementById("resumoGastos").textContent = `R$ ${fmt(totalGastos)}`;
+      document.getElementById("resumoDividas").textContent = `R$ ${fmt(totalDividasPendentes)}`;
+      document.getElementById("resumoLucros").textContent = `R$ ${fmt(totalLucrosEsperados)}`;
+      document.getElementById("saldoFinal").textContent = `R$ ${fmt(saldoFinal)}`;
+      document.getElementById("saldoFinal").style.color = saldoFinal >= 0 ? "#28a745" : "#dc3545";
+
+      // Atualizar gráfico
+      graficoSalario.data.datasets[0].data = [
+        totalGastos,
+        totalDividasPendentes,
+        Math.max(0, disponivel)
+      ];
       graficoSalario.update();
     }
 
-    function remover(tipo,index){
-      if(confirm("Deseja realmente apagar este item?")){
-        dados[tipo==="gasto"?"gastos":"receitas"].splice(index,1);
-        atualizar();
-      }
-    }
-
-    function resetApp(){
-      if(confirm("Tem certeza que deseja resetar todos os dados?")){
-        dados={gastos:[],receitas:[],salario:0};
-        atualizar();
-      }
-    }
-
+    // ========== INICIALIZAÇÃO ==========
     atualizar();
   </script>
 </body>

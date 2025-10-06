@@ -1,84 +1,173 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>💰 FinanceFlow — Minimal Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-/* ===== Reset & Base ===== */
-* { box-sizing:border-box; margin:0; padding:0; }
+/* ====== Reset & Base ====== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg:#f5f8fb;
-  --card:#ffffff;
-  --primary:#0077b6;
-  --muted:#6c757d;
-  --positive:#28a745;
-  --negative:#dc3545;
+  --bg: #f5f8fb;
+  --card: #ffffff;
+  --primary: #0077b6;
+  --muted: #6c757d;
+  --positive: #28a745;
+  --negative: #dc3545;
+}
+html, body {
+  height: 100%;
 }
 body {
   font-family: Inter, 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial;
   background: linear-gradient(180deg, var(--bg) 0%, #eef6fb 100%);
-  min-height: 100vh; display: flex; justify-content: center; padding:20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 16px;
+}
+.wrap {
+  width: 100%;
+  max-width: 1200px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-/* ===== Container ===== */
-.wrap { width: 100%; max-width: 1200px; }
-.panel { background: var(--card); border-radius:20px; box-shadow:0 10px 30px rgba(2,40,80,0.06); padding:16px; }
+/* ====== Panel ====== */
+.panel {
+  flex: 1;
+  background: var(--card);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(2,40,80,0.06);
+  padding: 20px;
+  overflow-y: auto;
+}
 
-/* ===== Header ===== */
-header { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
-header h1 { font-size:1.4rem; color: var(--primary); font-weight:700; }
-header p { color: var(--muted); font-size:0.9rem; }
+/* ====== Header ====== */
+header { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+header h1 { font-size: 1.4rem; color: var(--primary); font-weight: 700; letter-spacing: -0.2px; }
+header p { color: var(--muted); font-size: 0.95rem; }
 
-/* ===== Controls ===== */
-.controls { display:grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap:8px; margin:16px 0; }
+/* ====== Controls ====== */
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin: 20px 0;
+}
 .controls select, .controls input {
-  padding:8px 10px; border-radius:10px; border:1px solid #e9eef6; background:#fff; font-size:0.9rem;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #e9eef6;
+  background: #fff;
 }
 .controls button {
-  padding:8px 12px; border-radius:10px; border:none; background: linear-gradient(90deg,var(--primary),#005a8d);
-  color:white; font-weight:600; cursor:pointer; font-size:0.9rem;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(90deg, var(--primary), #005a8d);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
 }
-.controls .danger { background: linear-gradient(90deg,#dc3545,#b52b2b); }
+.controls .danger {
+  background: linear-gradient(90deg, #dc3545, #b52b2b);
+}
 
-/* ===== Stats Row ===== */
-.stats { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:16px; }
-.stat { background:#fbfdff; border-radius:12px; padding:12px; border:1px solid #f1f5f9; }
-.stat .label { font-size:0.7rem; color:var(--muted); text-transform:uppercase; font-weight:700; }
-.stat .value { font-size:1rem; font-weight:800; margin-top:6px; }
+/* ====== Stats ====== */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.stat {
+  background: #fbfdff;
+  border-radius: 12px;
+  padding: 14px;
+  border: 1px solid #f1f5f9;
+  text-align: left;
+}
+.stat .label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+}
+.stat .value {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin-top: 8px;
+}
 .stat.positive .value { color: var(--positive); }
 .stat.negative .value { color: var(--negative); }
 
-/* ===== Layout Grid ===== */
-.grid { display:grid; grid-template-columns:2fr 1.2fr; gap:16px; }
-.card { background: var(--card); border-radius:14px; padding:14px; border:1px solid #f1f5f9; box-shadow:0 6px 18px rgba(2,40,80,0.03); }
-.card h2 { font-size:1rem; margin-bottom:10px; color:#223; }
+/* ====== Layout ====== */
+.grid {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr;
+  gap: 18px;
+}
+.card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 18px;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 6px 18px rgba(2,40,80,0.03);
+}
+.card h2 {
+  font-size: 1rem;
+  margin-bottom: 12px;
+  color: #223;
+}
 
-/* ===== Table ===== */
-.table-wrapper { max-height:250px; overflow-y:auto; border-radius:12px; }
-table { width:100%; border-collapse:collapse; font-size:0.88rem; }
-thead th { text-align:left; padding:8px; font-weight:700; color:#334; background:#fbfdff; border-bottom:1px solid #eef3f8; position: sticky; top:0; z-index:1; }
-tbody td { padding:8px; border-bottom:1px solid #f3f6fb; }
-.tbl-type { text-transform:capitalize; width:90px; }
-.tbl-cat { width:120px; color:#556; }
-.tbl-amt { font-weight:800; width:110px; text-align:right; }
+/* ====== Table ====== */
+.table-wrapper {
+  max-height: 200px;
+  overflow-y: auto;
+  border-radius: 12px;
+}
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+thead th { text-align: left; padding: 10px 8px; font-weight: 700; color: #334; background: #fbfdff; border-bottom: 1px solid #eef3f8; }
+tbody td { padding: 10px 8px; border-bottom: 1px solid #f3f6fb; }
+.tbl-type { text-transform: capitalize; width: 90px; }
+.tbl-cat { width: 120px; color: #556; }
+.tbl-amt { font-weight: 800; width: 110px; text-align: right; }
 .positivo { color: var(--positive); }
 .negativo { color: var(--negative); }
-.btn-del { background:transparent; border:1px solid #f1f1f1; padding:5px 6px; border-radius:8px; cursor:pointer; font-size:0.8rem; }
+.btn-del { background: transparent; border: 1px solid #f1f1f1; padding: 6px 8px; border-radius: 8px; cursor: pointer; }
 
-/* Category breakdown */
-.category-item { display:flex; justify-content:space-between; padding:6px 0; border-top:1px solid #f3f6fb; }
-.category-name { display:flex; gap:6px; align-items:center; }
-.dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
+/* ====== Category breakdown ====== */
+.category-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-top: 1px solid #f3f6fb;
+}
+.category-name { display: flex; gap: 8px; align-items: center; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display:inline-block; }
 
-/* Charts */
-canvas { width:100% !important; height:auto !important; }
+/* ====== Gráficos ====== */
+canvas {
+  width: 100% !important;
+  max-height: 300px;
+}
 
-/* Responsivo */
-@media(max-width:920px){ .grid{grid-template-columns:1fr;} .stats{grid-template-columns:repeat(2,1fr);} }
-.fade { animation: fadeIn .4s ease both; }
-@keyframes fadeIn{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
+/* ====== Small chart ====== */
+.small-chart { height: 160px; margin-top:10px; }
+
+/* ====== Responsive ====== */
+@media (max-width: 920px) {
+  .grid { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ====== Fade ====== */
+.fade { animation: fadeIn .45s ease both; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 </head>
 <body>
@@ -117,10 +206,22 @@ canvas { width:100% !important; height:auto !important; }
     </div>
 
     <div class="stats">
-      <div class="stat positive"><div class="label">Receitas</div><div class="value" id="totalReceitas">R$ 0,00</div></div>
-      <div class="stat negative"><div class="label">Gastos</div><div class="value" id="totalGastos">R$ 0,00</div></div>
-      <div class="stat negative"><div class="label">Dívidas</div><div class="value" id="totalDividas">R$ 0,00</div></div>
-      <div class="stat positive"><div class="label">Lucros</div><div class="value" id="totalLucros">R$ 0,00</div></div>
+      <div class="stat positive">
+        <div class="label">Receitas</div>
+        <div class="value" id="totalReceitas">R$ 0,00</div>
+      </div>
+      <div class="stat negative">
+        <div class="label">Gastos</div>
+        <div class="value" id="totalGastos">R$ 0,00</div>
+      </div>
+      <div class="stat negative">
+        <div class="label">Dívidas</div>
+        <div class="value" id="totalDividas">R$ 0,00</div>
+      </div>
+      <div class="stat positive">
+        <div class="label">Lucros</div>
+        <div class="value" id="totalLucros">R$ 0,00</div>
+      </div>
     </div>
 
     <div class="grid">
@@ -136,27 +237,32 @@ canvas { width:100% !important; height:auto !important; }
           <table>
             <thead>
               <tr>
-                <th>#</th><th>Tipo</th><th>Categoria</th><th>Descrição</th><th style="text-align:right">Valor (R$)</th><th>Ações</th>
+                <th>#</th>
+                <th>Tipo</th>
+                <th>Categoria</th>
+                <th>Descrição</th>
+                <th style="text-align:right">Valor (R$)</th>
+                <th>Ações</th>
               </tr>
             </thead>
             <tbody id="tabela"></tbody>
           </table>
         </div>
 
-        <div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center;">
+        <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center;">
           <div>
-            <div style="font-size:0.85rem;color:var(--muted)">Salário disponível</div>
-            <div style="font-weight:800; margin-top:4px">R$ <span id="salarioValor">0.00</span></div>
+            <div style="font-size:0.9rem;color:var(--muted)">Salário disponível</div>
+            <div style="font-weight:800; margin-top:6px">R$ <span id="salarioValor">0.00</span></div>
           </div>
 
-          <div style="display:flex; gap:6px; align-items:center;">
-            <input id="salario" placeholder="Salário mensal" type="number" step="0.01" style="width:140px"/>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input id="salario" placeholder="Salário mensal" type="number" step="0.01" style="width:160px"/>
             <button id="defSalarioBtn">Definir</button>
           </div>
         </div>
 
-        <div style="margin-top:8px; font-size:0.9rem"><strong>Saldo:</strong> R$ <span id="saldo">0.00</span></div>
-        <div class="small-chart" style="margin-top:8px">
+        <div style="margin-top:12px; font-size:0.95rem"><strong>Saldo:</strong> R$ <span id="saldo">0.00</span></div>
+        <div class="small-chart">
           <canvas id="graficoSalario"></canvas>
         </div>
       </div>
@@ -165,8 +271,8 @@ canvas { width:100% !important; height:auto !important; }
 </div>
 
 <script>
-// ===== Dados iniciais =====
-let dados = { gastos: [], receitas: [], dividas: [], lucros: [], salario:0 };
+// ====== Dados iniciais ======
+let dados = { gastos: [], receitas: [], dividas: [], lucros: [], salario: 0 };
 const tabelaEl = document.getElementById('tabela');
 const saldoEl = document.getElementById('saldo');
 const salarioValorEl = document.getElementById('salarioValor');
@@ -176,43 +282,33 @@ const totalDividasEl = document.getElementById('totalDividas');
 const totalLucrosEl = document.getElementById('totalLucros');
 const categoriesList = ['Abundar','Doar','Investir','Educar','Desfrutar','Conquistar','Sustentar','Bug'];
 
-// ===== Chart principal =====
+// ====== Chart principal ======
 const ctx = document.getElementById('grafico').getContext('2d');
-const graficoLabels = [...categoriesList,'Dívidas','Lucros','Sobra'];
+const graficoLabels = [...categoriesList, 'Dívidas', 'Lucros', 'Sobra'];
 const graficoColors = ['#264653','#2a9d8f','#e9c46a','#f4a261','#e76f51','#6a4c93','#0077b6','#90e0ef','#e63946','#06d6a0','#06a7d6'];
 const grafico = new Chart(ctx,{
   type:'doughnut',
-  data:{ labels:graficoLabels, datasets:[{data:Array(graficoLabels.length).fill(0), backgroundColor:graficoColors, borderColor:'#fff', borderWidth:2}]},
-  options:{
-    responsive:true, maintainAspectRatio:false, cutout:'68%',
-    animation:{animateRotate:true, animateScale:true, duration:500},
-    plugins:{
-      legend:{position:'bottom', labels:{boxWidth:10,padding:10}},
-      tooltip:{
-        padding:8, cornerRadius:6, backgroundColor:'rgba(0,0,0,0.75)',
-        callbacks:{ label: ctx => { const total = ctx.dataset.data.reduce((a,b)=>a+b,0); const val = ctx.raw || 0; const pct = total ? ((val/total)*100).toFixed(1) : 0; return `${ctx.label}: R$ ${val.toFixed(2)} (${pct}%)`; } }
-      }
-    }
-  }
-});
+  data:{ labels:graficoLabels, datasets:[{ data:Array(graficoLabels.length).fill(0), backgroundColor:graficoColors, borderColor:'#fff', borderWidth:3 }] },
+  options:{ responsive:true, maintainAspectRatio:false, cutout:'68%', animation:{animateRotate:true,animateScale:true,duration:600}, plugins:{ legend:{position:'bottom', labels:{boxWidth:10,padding:12}}, tooltip:{padding:10, cornerRadius:8, backgroundColor:'rgba(0,0,0,0.8)', callbacks:{ label: ctx => { const total=ctx.dataset.data.reduce((a,b)=>a+b,0); const val=ctx.raw||0; const pct=total?((val/total)*100).toFixed(1):0; return `${ctx.label}: R$ ${Number(val).toFixed(2)} (${pct}%)`; } } } } } });
 
-// ===== Chart salário =====
+// ====== Chart salário ======
 const ctxS = document.getElementById('graficoSalario').getContext('2d');
 const graficoSalario = new Chart(ctxS,{
   type:'doughnut',
-  data:{ labels:['Gastos','Receitas','Dívidas','Lucros'], datasets:[{ data:[0,0,0,0], backgroundColor:['#e76f51','#28a745','#e63946','#06d6a0'], borderColor:'#fff', borderWidth:2 }]},
-  options:{ responsive:true, maintainAspectRatio:false, cutout:'60%', plugins:{legend:{position:'bottom', labels:{boxWidth:10}}} }
+  data:{ labels:['Gastos','Receitas','Dívidas','Lucros'], datasets:[{ data:[0,0,0,0], backgroundColor:['#e76f51','#28a745','#e63946','#06d6a0'], borderColor:'#fff', borderWidth:3 }] },
+  options:{ responsive:true, maintainAspectRatio:false, cutout:'60%', plugins:{ legend:{position:'bottom', labels:{boxWidth:10}} } }
 });
 
-// ===== Utilidades =====
-const currency = v=> Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2});
-const makeId = ()=> Date.now().toString(36)+Math.floor(Math.random()*10000).toString(36);
+// ====== Utilidades ======
+const currency=v=>Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const makeId=()=>Date.now().toString(36)+Math.floor(Math.random()*10000).toString(36);
 
-// ===== Eventos =====
+// ====== Eventos ======
 document.getElementById('addBtn').addEventListener('click', adicionar);
 document.getElementById('resetBtn').addEventListener('click', resetApp);
 document.getElementById('defSalarioBtn').addEventListener('click', definirSalario);
 
+// ====== Funções ======
 function definirSalario(){
   const s=parseFloat(document.getElementById('salario').value);
   if(isNaN(s)||s<=0){ alert('Digite um salário válido'); return; }
@@ -227,7 +323,7 @@ function adicionar(){
   const descricao=document.getElementById('descricao').value.trim();
   const valor=parseFloat(document.getElementById('valor').value);
   if(!descricao||isNaN(valor)||valor<=0){ alert('Preencha corretamente.'); return; }
-  const item={id:makeId(),descricao,valor,categoria};
+  const item={ id: makeId(), descricao, valor, categoria };
   if(tipo==='gasto') dados.gastos.push(item);
   else if(tipo==='receita') dados.receitas.push(item);
   else if(tipo==='divida') dados.dividas.push(item);
@@ -240,7 +336,7 @@ function adicionar(){
 
 function resetApp(){
   if(!confirm('Resetar todos os dados?')) return;
-  dados={gastos:[],receitas:[],dividas:[],lucros:[],salario:0};
+  dados={ gastos: [], receitas: [], dividas: [], lucros: [], salario: 0 };
   atualizar();
 }
 
@@ -253,7 +349,6 @@ function removerPorId(id){
   atualizar();
 }
 
-// ===== Atualizar UI =====
 function atualizar(){
   const totalGastos=dados.gastos.reduce((s,i)=>s+i.valor,0);
   const totalReceitas=dados.receitas.reduce((s,i)=>s+i.valor,0);
@@ -269,40 +364,45 @@ function atualizar(){
   saldoEl.style.color=saldo>=0?'var(--positive)':'var(--negative)';
   salarioValorEl.textContent=currency(dados.salario);
 
-  // Tabela
+  // Tabela (exibir últimas 20 transações)
   tabelaEl.innerHTML='';
   const todas=[...dados.gastos.map(it=>({...it,tipo:'gasto'})),...dados.receitas.map(it=>({...it,tipo:'receita'})),...dados.dividas.map(it=>({...it,tipo:'divida'})),...dados.lucros.map(it=>({...it,tipo:'lucro'}))];
   todas.sort((a,b)=>b.id.localeCompare(a.id));
-  // Exibir últimas 20
   todas.slice(0,20).forEach((t,idx)=>{
     const tr=document.createElement('tr');
     tr.innerHTML=`<td>${idx+1}</td>
       <td class="tbl-type">${t.tipo}</td>
-      <td class="tbl-cat">${t.categoria||'-'}</td>
+      <td class="tbl-cat">${t.categoria}</td>
       <td>${t.descricao}</td>
-      <td class="tbl-amt ${t.tipo==='gasto'||t.tipo==='divida'?'negativo':'positivo'}" style="text-align:right">${currency(t.valor)}</td>
-      <td><button class="btn-del" onclick="removerPorId('${t.id}')">Excluir</button></td>`;
+      <td class="tbl-amt ${t.tipo==='gasto'||t.tipo==='divida'?'negativo':'positivo'}">${currency(t.valor)}</td>
+      <td><button class="btn-del" onclick="removerPorId('${t.id}')">❌</button></td>`;
     tabelaEl.appendChild(tr);
   });
 
-  // Gráfico principal
-  const categoriasValores=categoriesList.map(cat=>dados.gastos.filter(g=>g.categoria===cat).reduce((s,i)=>s+i.valor,0));
-  grafico.data.datasets[0].data=[...categoriasValores,totalDividas,totalLucros,Math.max(0,saldo)];
+  // Atualiza gráfico principal
+  const dadosGrafico = categoriesList.map(cat => dados.gastos.filter(g=>g.categoria===cat).reduce((s,i)=>s+i.valor,0));
+  dadosGrafico.push(totalDividas, totalLucros, saldo>0?saldo:0);
+  grafico.data.datasets[0].data = dadosGrafico;
   grafico.update();
 
-  // Breakdown
-  const cb=document.getElementById('categoryBreakdown'); cb.innerHTML='';
-  const colors={Abundar:'#264653',Doar:'#2a9d8f',Investir:'#e9c46a',Educar:'#f4a261',Desfrutar:'#e76f51',Conquistar:'#6a4c93',Sustentar:'#0077b6',Bug:'#90e0ef'};
-  categoriesList.forEach(cat=>{ const val=dados.gastos.filter(g=>g.categoria===cat).reduce((s,i)=>s+i.valor,0); if(val>0){ const d=document.createElement('div'); d.className='category-item'; d.innerHTML=`<div class="category-name"><span class="dot" style="background:${colors[cat]}"></span>${cat}</div><div>R$ ${currency(val)}</div>`; cb.appendChild(d);} });
-  if(totalDividas>0){ const d=document.createElement('div'); d.className='category-item'; d.innerHTML=`<div>Dívidas</div><div>R$ ${currency(totalDividas)}</div>`; cb.appendChild(d); }
-  if(totalLucros>0){ const d=document.createElement('div'); d.className='category-item'; d.innerHTML=`<div>Lucros</div><div>R$ ${currency(totalLucros)}</div>`; cb.appendChild(d); }
-
-  // Gráfico salário
-  graficoSalario.data.datasets[0].data=[totalGastos,totalReceitas,totalDividas,totalLucros];
+  // Atualiza gráfico salário
+  graficoSalario.data.datasets[0].data = [totalGastos, totalReceitas, totalDividas, totalLucros];
   graficoSalario.update();
+
+  // Quebra por categoria
+  const breakdownEl=document.getElementById('categoryBreakdown');
+  breakdownEl.innerHTML='';
+  categoriesList.forEach((c,i)=>{
+    const valor = dados.gastos.filter(g=>g.categoria===c).reduce((s,g)=>s+g.valor,0);
+    if(valor>0){
+      const div=document.createElement('div');
+      div.className='category-item';
+      div.innerHTML=`<div class="category-name"><span class="dot" style="background-color:${graficoColors[i]}"></span>${c}</div><div>R$ ${currency(valor)}</div>`;
+      breakdownEl.appendChild(div);
+    }
+  });
 }
 
-// Inicializa
 atualizar();
 </script>
 </body>

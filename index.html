@@ -7,402 +7,174 @@
   <title>FinanceFlow - Controle Financeiro</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    /* SEU CSS ORIGINAL (excelente, sem mudanças) */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --primary: #0077b6;
-      --primary-dark: #005a8d;
-      --primary-light: #00a8e8;
-      --success: #28a745;
-      --warning: #ffc107;
-      --danger: #dc3545;
-      --info: #17a2b8;
-      --neutral-50: #f8f9fa;
-      --neutral-100: #f1f3f5;
-      --neutral-200: #e9ecef;
-      --neutral-400: #6c757d;
-      --neutral-800: #212529;
-      --white: #ffffff;
+      --primary: #0077b6; --primary-dark: #005a8d; --primary-light: #00a8e8;
+      --success: #28a745; --warning: #ffc107; --danger: #dc3545; --info: #17a2b8;
+      --neutral-50: #f8f9fa; --neutral-100: #f1f3f5; --neutral-200: #e9ecef;
+      --neutral-400: #6c757d; --neutral-800: #212529; --white: #ffffff;
       --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
       --shadow-md: 0 4px 16px rgba(0, 119, 182, 0.08);
       --shadow-lg: 0 8px 24px rgba(0, 119, 182, 0.12);
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --radius-xl: 20px;
+      --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 20px;
       --transition: all 0.3s ease;
     }
-
     body {
       background: linear-gradient(135deg, #f4f7fb 0%, #e8f0f7 100%);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      display: flex;
-      justify-content: center;
-      padding: 24px 16px;
-      min-height: 100vh;
-      color: var(--neutral-800);
-      line-height: 1.6;
+      display: flex; justify-content: center; padding: 24px 16px;
+      min-height: 100vh; color: var(--neutral-800); line-height: 1.6;
     }
-
     .container {
-      width: 100%;
-      max-width: 1400px;
-      background: var(--white);
-      border-radius: 24px;
-      box-shadow: var(--shadow-md);
-      padding: 40px;
+      width: 100%; max-width: 1400px; background: var(--white);
+      border-radius: 24px; box-shadow: var(--shadow-md); padding: 40px;
     }
-
     h1 {
-      text-align: center;
-      margin-bottom: 8px;
-      color: var(--primary);
-      font-size: 2.5rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
+      text-align: center; margin-bottom: 8px; color: var(--primary);
+      font-size: 2.5rem; font-weight: 700; letter-spacing: -0.5px;
     }
-
     .subtitle {
-      text-align: center;
-      color: var(--neutral-400);
-      font-size: 0.95rem;
-      margin-bottom: 32px;
-      font-weight: 400;
+      text-align: center; color: var(--neutral-400); font-size: 0.95rem;
+      margin-bottom: 32px; font-weight: 400;
     }
-
-    /* FORMULÁRIOS */
     .form {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 12px;
-      margin-bottom: 24px;
-      background: var(--neutral-50);
-      padding: 24px;
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-sm);
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px; margin-bottom: 24px; background: var(--neutral-50);
+      padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);
     }
-
-    .form input,
-    .form select {
-      padding: 12px 16px;
-      border: 2px solid var(--neutral-200);
-      border-radius: var(--radius-md);
-      font-size: 0.95rem;
-      transition: var(--transition);
-      background: var(--white);
-      font-family: inherit;
+    .form input, .form select {
+      padding: 12px 16px; border: 2px solid var(--neutral-200);
+      border-radius: var(--radius-md); font-size: 0.95rem;
+      transition: var(--transition); background: var(--white); font-family: inherit;
     }
-
-    .form input:focus,
-    .form select:focus {
-      outline: none;
-      border-color: var(--primary);
+    .form input:focus, .form select:focus {
+      outline: none; border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.1);
     }
-
     .form button {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      color: var(--white);
-      border: none;
-      border-radius: var(--radius-md);
-      padding: 12px 20px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: var(--transition);
-      box-shadow: 0 4px 12px rgba(0, 119, 182, 0.2);
+      color: var(--white); border: none; border-radius: var(--radius-md);
+      padding: 12px 20px; cursor: pointer; font-weight: 600; font-size: 0.95rem;
+      transition: var(--transition); box-shadow: 0 4px 12px rgba(0, 119, 182, 0.2);
       font-family: inherit;
     }
-
     .form button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0, 119, 182, 0.3);
+      transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0, 119, 182, 0.3);
     }
-
     .reset-btn {
       background: linear-gradient(135deg, var(--danger) 0%, #c82333 100%) !important;
       box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2) !important;
     }
-
-    /* ABAS DE NAVEGAÇÃO */
     .tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 24px;
-      border-bottom: 2px solid var(--neutral-100);
-      overflow-x: auto;
+      display: flex; gap: 8px; margin-bottom: 24px;
+      border-bottom: 2px solid var(--neutral-100); overflow-x: auto;
     }
-
     .tab-button {
-      padding: 12px 24px;
-      background: transparent;
-      border: none;
-      border-bottom: 3px solid transparent;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: var(--neutral-400);
-      transition: var(--transition);
+      padding: 12px 24px; background: transparent; border: none;
+      border-bottom: 3px solid transparent; cursor: pointer; font-weight: 600;
+      font-size: 0.95rem; color: var(--neutral-400); transition: var(--transition);
       white-space: nowrap;
     }
-
     .tab-button:hover {
-      color: var(--primary);
-      background: var(--neutral-50);
+      color: var(--primary); background: var(--neutral-50);
       border-radius: var(--radius-md) var(--radius-md) 0 0;
     }
-
-    .tab-button.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    /* CARDS DE ESTATÍSTICAS */
+    .tab-button.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
     .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px; margin-bottom: 24px;
     }
-
     .stat-card {
-      background: var(--white);
-      padding: 20px;
-      border-radius: var(--radius-lg);
-      text-align: center;
-      border: 2px solid var(--neutral-100);
-      transition: var(--transition);
-      box-shadow: var(--shadow-sm);
+      background: var(--white); padding: 20px; border-radius: var(--radius-lg);
+      text-align: center; border: 2px solid var(--neutral-100);
+      transition: var(--transition); box-shadow: var(--shadow-sm);
     }
-
     .stat-card:hover {
-      border-color: var(--primary);
-      transform: translateY(-2px);
+      border-color: var(--primary); transform: translateY(-2px);
       box-shadow: var(--shadow-md);
     }
-
     .stat-card .stat-label {
-      font-size: 0.75rem;
-      color: var(--neutral-400);
-      text-transform: uppercase;
-      font-weight: 600;
-      margin-bottom: 8px;
-      letter-spacing: 0.5px;
+      font-size: 0.75rem; color: var(--neutral-400); text-transform: uppercase;
+      font-weight: 600; margin-bottom: 8px; letter-spacing: 0.5px;
     }
-
-    .stat-card .stat-value {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--neutral-800);
-    }
-
+    .stat-card .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--neutral-800); }
     .stat-card.positive .stat-value { color: var(--success); }
     .stat-card.negative .stat-value { color: var(--danger); }
     .stat-card.neutral .stat-value { color: var(--primary); }
     .stat-card.warning .stat-value { color: var(--warning); }
-
     .progress-bar {
-      width: 100%;
-      height: 6px;
-      background: var(--neutral-200);
-      border-radius: 10px;
-      overflow: hidden;
-      margin-top: 8px;
+      width: 100%; height: 6px; background: var(--neutral-200);
+      border-radius: 10px; overflow: hidden; margin-top: 8px;
     }
-
     .progress-fill {
       height: 100%;
       background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
-      transition: width 0.5s ease;
-      border-radius: 10px;
+      transition: width 0.5s ease; border-radius: 10px;
     }
-
-    /* DASHBOARD */
     .dashboard {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-      gap: 24px;
-      margin-bottom: 24px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 24px; margin-bottom: 24px;
     }
-
     .card {
-      background: var(--white);
-      padding: 28px;
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--neutral-100);
+      background: var(--white); padding: 28px; border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm); border: 1px solid var(--neutral-100);
       transition: var(--transition);
     }
-
-    .card:hover {
-      box-shadow: var(--shadow-lg);
-      transform: translateY(-2px);
-    }
-
+    .card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
     .card h2 {
-      font-size: 1.25rem;
-      color: var(--neutral-800);
-      margin-bottom: 20px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      font-size: 1.25rem; color: var(--neutral-800); margin-bottom: 20px;
+      font-weight: 600; display: flex; align-items: center; gap: 8px;
     }
-
-    /* LISTA DE ITENS */
-    ul {
-      list-style: none;
-      max-height: 400px;
-      overflow-y: auto;
-    }
-
+    ul { list-style: none; max-height: 400px; overflow-y: auto; }
     ul::-webkit-scrollbar { width: 6px; }
     ul::-webkit-scrollbar-track { background: var(--neutral-100); border-radius: 10px; }
     ul::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
-
     li {
-      padding: 12px 8px;
-      border-bottom: 1px solid var(--neutral-100);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.95rem;
-      color: var(--neutral-800);
-      transition: background 0.2s ease;
-      border-radius: var(--radius-sm);
+      padding: 12px 8px; border-bottom: 1px solid var(--neutral-100);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.95rem; color: var(--neutral-800);
+      transition: background 0.2s ease; border-radius: var(--radius-sm);
     }
-
     li:hover { background: var(--neutral-50); }
-
-    .item-info {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .item-title {
-      font-weight: 600;
-    }
-
-    .item-detail {
-      font-size: 0.85rem;
-      color: var(--neutral-400);
-    }
-
-    .item-actions {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
+    .item-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .item-title { font-weight: 600; }
+    .item-detail { font-size: 0.85rem; color: var(--neutral-400); }
+    .item-actions { display: flex; gap: 8px; align-items: center; }
     .badge {
-      padding: 4px 10px;
-      border-radius: var(--radius-sm);
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
+      padding: 4px 10px; border-radius: var(--radius-sm); font-size: 0.75rem;
+      font-weight: 600; text-transform: uppercase;
     }
-
-    .badge.paid {
-      background: #d4edda;
-      color: #155724;
-    }
-
-    .badge.pending {
-      background: #fff3cd;
-      color: #856404;
-    }
-
-    .badge.received {
-      background: #d1ecf1;
-      color: #0c5460;
-    }
-
-    .badge.expected {
-      background: #e2e3e5;
-      color: #383d41;
-    }
-
+    .badge.paid { background: #d4edda; color: #155724; }
+    .badge.pending { background: #fff3cd; color: #856404; }
+    .badge.received { background: #d1ecf1; color: #0c5460; }
+    .badge.expected { background: #e2e3e5; color: #383d41; }
     .btn {
-      border: none;
-      border-radius: var(--radius-sm);
-      padding: 6px 12px;
-      cursor: pointer;
-      font-size: 0.75rem;
-      font-weight: 600;
-      transition: var(--transition);
-      font-family: inherit;
+      border: none; border-radius: var(--radius-sm); padding: 6px 12px;
+      cursor: pointer; font-size: 0.75rem; font-weight: 600;
+      transition: var(--transition); font-family: inherit;
     }
-
-    .btn-success {
-      background: var(--success);
-      color: var(--white);
-    }
-
-    .btn-danger {
-      background: var(--danger);
-      color: var(--white);
-    }
-
-    .btn-info {
-      background: var(--info);
-      color: var(--white);
-    }
-
-    .btn:hover {
-      opacity: 0.9;
-      transform: scale(1.05);
-    }
-
+    .btn-success { background: var(--success); color: var(--white); }
+    .btn-danger { background: var(--danger); color: var(--white); }
+    .btn-info { background: var(--info); color: var(--white); }
+    .btn:hover { opacity: 0.9; transform: scale(1.05); }
     .total {
-      font-weight: 600;
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 2px solid var(--primary);
-      color: var(--primary);
+      font-weight: 600; margin-top: 16px; padding-top: 16px;
+      border-top: 2px solid var(--primary); color: var(--primary);
       font-size: 1.25rem;
     }
-
     .empty-state {
-      text-align: center;
-      padding: 40px 20px;
-      color: var(--neutral-400);
+      text-align: center; padding: 40px 20px; color: var(--neutral-400);
     }
-
-    .empty-state-icon {
-      font-size: 3rem;
-      margin-bottom: 12px;
-      opacity: 0.3;
-    }
-
-    .empty-state-text {
-      font-size: 1rem;
-      font-weight: 500;
-    }
-
-    .fade-in {
-      animation: fadeIn 0.4s ease-in;
-    }
-
+    .empty-state-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.3; }
+    .empty-state-text { font-size: 1rem; font-weight: 500; }
+    .fade-in { animation: fadeIn 0.4s ease-in; }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    /* RESPONSIVIDADE */
     @media (max-width: 768px) {
       .container { padding: 24px 16px; }
       h1 { font-size: 2rem; }
@@ -411,6 +183,34 @@
       .dashboard { grid-template-columns: 1fr; }
       .tabs { flex-wrap: nowrap; }
     }
+
+    /* --- MELHORIAS ADICIONADAS --- */
+
+    /* 1. Labels "Screen-reader only" para Acessibilidade */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;
+    }
+
+    /* 2. Notificação "Toast" (substitui o alert()) */
+    #toast {
+      position: fixed;
+      bottom: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 16px 24px;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      font-weight: 600;
+      color: var(--white);
+      transition: bottom 0.5s ease-in-out;
+      z-index: 1000;
+    }
+    #toast.show { bottom: 30px; }
+    #toast.success { background: var(--success); }
+    #toast.error { background: var(--danger); }
+    #toast.info { background: var(--primary); }
   </style>
 </head>
 <body>
@@ -418,55 +218,53 @@
     <h1>💰 FinanceFlow</h1>
     <div class="subtitle">Controle Financeiro Completo</div>
 
-    <!-- NAVEGAÇÃO POR ABAS -->
     <div class="tabs">
-      <button class="tab-button active" onclick="mudarAba('transacoes')">📊 Transações</button>
-      <button class="tab-button" onclick="mudarAba('dividas')">💳 Dívidas</button>
-      <button class="tab-button" onclick="mudarAba('lucros')">💎 Lucros</button>
-      <button class="tab-button" onclick="mudarAba('salario')">💼 Salário</button>
+      <button class="tab-button active" data-aba="transacoes">📊 Transações</button>
+      <button class="tab-button" data-aba="dividas">💳 Dívidas</button>
+      <button class="tab-button" data-aba="lucros">💎 Lucros</button>
+      <button class="tab-button" data-aba="salario">💼 Salário</button>
     </div>
 
-    <!-- ABA: TRANSAÇÕES -->
     <div id="tab-transacoes" class="tab-content active">
       <div class="form">
+        <label for="tipo" class="sr-only">Tipo</label>
         <select id="tipo">
           <option value="gasto">💸 Gasto</option>
           <option value="receita">💵 Receita</option>
         </select>
+        <label for="categoria" class="sr-only">Categoria</label>
         <select id="categoria">
-          <option value="Abundar">Abundar</option>
-          <option value="Doar">Doar</option>
-          <option value="Investir">Investir</option>
-          <option value="Educar">Educar</option>
-          <option value="Desfrutar">Desfrutar</option>
-          <option value="Conquistar">Conquistar</option>
-          <option value="Sustentar">Sustentar</option>
-          <option value="Bug">Bug</option>
+          <option value="Abundar">Abundar</option> <option value="Doar">Doar</option>
+          <option value="Investir">Investir</option> <option value="Educar">Educar</option>
+          <option value="Desfrutar">Desfrutar</option> <option value="Conquistar">Conquistar</option>
+          <option value="Sustentar">Sustentar</option> <option value="Bug">Bug</option>
         </select>
+        <label for="descricao" class="sr-only">Descrição</label>
         <input type="text" id="descricao" placeholder="Descrição">
+        <label for="valor" class="sr-only">Valor</label>
         <input type="number" id="valor" placeholder="Valor (R$)" step="0.01">
-        <button onclick="adicionarTransacao()">➕ Adicionar</button>
-        <button class="reset-btn" onclick="resetApp()">🗑️ Resetar</button>
+        <button id="btnAdicionarTransacao">➕ Adicionar</button>
+        <button class="reset-btn" id="btnResetApp">🗑️ Resetar</button>
       </div>
 
       <div class="stats-grid">
         <div class="stat-card positive">
           <div class="stat-label">💵 Total Receitas</div>
-          <div class="stat-value" id="totalReceitas">R$ 0,00</div>
+          <div class="stat-value" id="totalReceitas" aria-live="polite">R$ 0,00</div>
           <div class="progress-bar">
             <div class="progress-fill" id="progressReceitas" style="width: 0%"></div>
           </div>
         </div>
         <div class="stat-card negative">
           <div class="stat-label">💸 Total Gastos</div>
-          <div class="stat-value" id="totalGastos">R$ 0,00</div>
+          <div class="stat-value" id="totalGastos" aria-live="polite">R$ 0,00</div>
           <div class="progress-bar">
             <div class="progress-fill" id="progressGastos" style="width: 0%; background: linear-gradient(90deg, #dc3545 0%, #ff6b7a 100%)"></div>
           </div>
         </div>
         <div class="stat-card neutral">
           <div class="stat-label">💰 Saldo Atual</div>
-          <div class="stat-value" id="saldoAtual">R$ 0,00</div>
+          <div class="stat-value" id="saldoAtual" aria-live="polite">R$ 0,00</div>
         </div>
       </div>
 
@@ -482,28 +280,31 @@
       </div>
     </div>
 
-    <!-- ABA: DÍVIDAS -->
     <div id="tab-dividas" class="tab-content">
       <div class="form">
+        <label for="dividaNome" class="sr-only">Nome da dívida</label>
         <input type="text" id="dividaNome" placeholder="Nome da dívida">
+        <label for="dividaValor" class="sr-only">Valor</label>
         <input type="number" id="dividaValor" placeholder="Valor (R$)" step="0.01">
+        <label for="dividaVencimento" class="sr-only">Vencimento</label>
         <input type="date" id="dividaVencimento">
+        <label for="dividaCredor" class="sr-only">Credor</label>
         <input type="text" id="dividaCredor" placeholder="Credor">
-        <button onclick="adicionarDivida()">➕ Adicionar Dívida</button>
+        <button id="btnAdicionarDivida">➕ Adicionar Dívida</button>
       </div>
 
       <div class="stats-grid">
         <div class="stat-card negative">
           <div class="stat-label">💳 Dívidas Pendentes</div>
-          <div class="stat-value" id="totalDividasPendentes">R$ 0,00</div>
+          <div class="stat-value" id="totalDividasPendentes" aria-live="polite">R$ 0,00</div>
         </div>
         <div class="stat-card positive">
           <div class="stat-label">✅ Dívidas Pagas</div>
-          <div class="stat-value" id="totalDividasPagas">R$ 0,00</div>
+          <div class="stat-value" id="totalDividasPagas" aria-live="polite">R$ 0,00</div>
         </div>
         <div class="stat-card warning">
           <div class="stat-label">⏰ Vencendo Hoje</div>
-          <div class="stat-value" id="dividasVencendo">0</div>
+          <div class="stat-value" id="dividasVencendo" aria-live="polite">0</div>
         </div>
       </div>
 
@@ -519,31 +320,34 @@
       </div>
     </div>
 
-    <!-- ABA: LUCROS -->
     <div id="tab-lucros" class="tab-content">
       <div class="form">
+        <label for="lucroFonte" class="sr-only">Fonte do lucro</label>
         <input type="text" id="lucroFonte" placeholder="Fonte do lucro">
+        <label for="lucroValor" class="sr-only">Valor</label>
         <input type="number" id="lucroValor" placeholder="Valor (R$)" step="0.01">
+        <label for="lucroData" class="sr-only">Data</label>
         <input type="date" id="lucroData">
+        <label for="lucroStatus" class="sr-only">Status</label>
         <select id="lucroStatus">
           <option value="esperado">Esperado</option>
           <option value="recebido">Recebido</option>
         </select>
-        <button onclick="adicionarLucro()">➕ Adicionar Lucro</button>
+        <button id="btnAdicionarLucro">➕ Adicionar Lucro</button>
       </div>
 
       <div class="stats-grid">
         <div class="stat-card positive">
           <div class="stat-label">💎 Lucros Recebidos</div>
-          <div class="stat-value" id="totalLucrosRecebidos">R$ 0,00</div>
+          <div class="stat-value" id="totalLucrosRecebidos" aria-live="polite">R$ 0,00</div>
         </div>
         <div class="stat-card neutral">
           <div class="stat-label">⏳ Lucros Esperados</div>
-          <div class="stat-value" id="totalLucrosEsperados">R$ 0,00</div>
+          <div class="stat-value" id="totalLucrosEsperados" aria-live="polite">R$ 0,00</div>
         </div>
         <div class="stat-card warning">
           <div class="stat-label">📊 Taxa de Realização</div>
-          <div class="stat-value" id="taxaRealizacao">0%</div>
+          <div class="stat-value" id="taxaRealizacao" aria-live="polite">0%</div>
         </div>
       </div>
 
@@ -559,25 +363,25 @@
       </div>
     </div>
 
-    <!-- ABA: SALÁRIO -->
     <div id="tab-salario" class="tab-content">
       <div class="form">
+        <label for="salario" class="sr-only">Salário mensal</label>
         <input type="number" id="salario" placeholder="Salário mensal (R$)" step="0.01">
-        <button onclick="definirSalario()">💼 Definir Salário</button>
+        <button id="btnDefinirSalario">💼 Definir Salário</button>
       </div>
 
       <div class="stats-grid">
         <div class="stat-card neutral">
           <div class="stat-label">💼 Salário Mensal</div>
-          <div class="stat-value" id="salarioMensal">R$ 0,00</div>
+          <div class="stat-value" id="salarioMensal" aria-live="polite">R$ 0,00</div>
         </div>
         <div class="stat-card negative">
           <div class="stat-label">💸 Total Comprometido</div>
-          <div class="stat-value" id="totalComprometido">R$ 0,00</div>
+          <div class="stat-value" id="totalComprometido" aria-live="polite">R$ 0,00</div>
         </div>
         <div class="stat-card positive">
           <div class="stat-label">💰 Disponível</div>
-          <div class="stat-value" id="salarioDisponivel">R$ 0,00</div>
+          <div class="stat-value" id="salarioDisponivel" aria-live="polite">R$ 0,00</div>
         </div>
       </div>
 
@@ -590,19 +394,19 @@
           <h2>📈 Resumo Financeiro</h2>
           <div style="padding: 20px;">
             <div style="margin-bottom: 16px;">
-              <strong>Receita Total:</strong> <span id="resumoReceita">R$ 0,00</span>
+              <strong>Receita Total:</strong> <span id="resumoReceita" aria-live="polite">R$ 0,00</span>
             </div>
             <div style="margin-bottom: 16px;">
-              <strong>Gastos Totais:</strong> <span id="resumoGastos">R$ 0,00</span>
+              <strong>Gastos Totais:</strong> <span id="resumoGastos" aria-live="polite">R$ 0,00</span>
             </div>
             <div style="margin-bottom: 16px;">
-              <strong>Dívidas Pendentes:</strong> <span id="resumoDividas">R$ 0,00</span>
+              <strong>Dívidas Pendentes:</strong> <span id="resumoDividas" aria-live="polite">R$ 0,00</span>
             </div>
             <div style="margin-bottom: 16px;">
-              <strong>Lucros Esperados:</strong> <span id="resumoLucros">R$ 0,00</span>
+              <strong>Lucros Esperados:</strong> <span id="resumoLucros" aria-live="polite">R$ 0,00</span>
             </div>
             <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #0077b6; font-size: 1.2rem;">
-              <strong>Saldo Final:</strong> <span id="saldoFinal" style="color: #0077b6;">R$ 0,00</span>
+              <strong>Saldo Final:</strong> <span id="saldoFinal" style="color: #0077b6;" aria-live="polite">R$ 0,00</span>
             </div>
           </div>
         </div>
@@ -610,251 +414,285 @@
     </div>
   </div>
 
+  <div id="toast"></div>
+
   <script>
-    // ========== DADOS DA APLICAÇÃO ==========
-    let dados = {
-      gastos: [],
-      receitas: [],
-      dividas: [],
-      lucros: [],
-      salario: 0
-    };
+    // ========== INICIALIZAÇÃO ==========
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      // ========== DADOS DA APLICAÇÃO ==========
+      let dados = {
+        gastos: [], receitas: [], dividas: [], lucros: [], salario: 0
+      };
 
-    // ========== CONFIGURAÇÕES ==========
-    const coresCategorias = {
-      Abundar: "#264653", Doar: "#2a9d8f", Investir: "#e9c46a", Educar: "#f4a261",
-      Desfrutar: "#e76f51", Conquistar: "#6a4c93", Sustentar: "#0077b6", Bug: "#90e0ef"
-    };
+      // ========== CONFIGURAÇÕES ==========
+      const coresCategorias = {
+        Abundar: "#264653", Doar: "#2a9d8f", Investir: "#e9c46a", Educar: "#f4a261",
+        Desfrutar: "#e76f51", Conquistar: "#6a4c93", Sustentar: "#0077b6", Bug: "#90e0ef"
+      };
 
-    const configGrafico = {
-      type: "doughnut",
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        plugins: {
-          legend: { position: "bottom", labels: { padding: 12, font: { size: 11 }, usePointStyle: true } },
-          tooltip: {
-            backgroundColor: 'rgba(0,0,0,0.8)',
-            padding: 12,
-            cornerRadius: 8,
-            callbacks: {
-              label: function(ctx) {
-                let total = ctx.dataset.data.reduce((a,b) => a+b, 0);
-                let valor = ctx.raw;
-                let pct = total > 0 ? ((valor/total)*100).toFixed(1) : 0;
-                return `${ctx.label}: R$ ${valor.toFixed(2)} (${pct}%)`;
+      const configGrafico = {
+        type: "doughnut",
+        options: {
+          responsive: true, maintainAspectRatio: true,
+          plugins: {
+            legend: { position: "bottom", labels: { padding: 12, font: { size: 11 }, usePointStyle: true } },
+            tooltip: {
+              backgroundColor: 'rgba(0,0,0,0.8)', padding: 12, cornerRadius: 8,
+              callbacks: {
+                label: function(ctx) {
+                  let total = ctx.dataset.data.reduce((a,b) => a+b, 0);
+                  let valor = ctx.raw;
+                  let pct = total > 0 ? ((valor/total)*100).toFixed(1) : 0;
+                  return `${ctx.label}: R$ ${valor.toFixed(2)} (${pct}%)`;
+                }
               }
             }
+          },
+          animation: { duration: 800 }
+        }
+      };
+
+      // ========== GRÁFICOS ==========
+      const graficoTransacoes = new Chart(document.getElementById("graficoTransacoes").getContext("2d"), {
+        ...configGrafico,
+        data: {
+          labels: Object.keys(coresCategorias),
+          datasets: [{ data: Array(8).fill(0), backgroundColor: Object.values(coresCategorias), borderWidth: 2, borderColor: "#fff" }]
+        }
+      });
+      const graficoDividas = new Chart(document.getElementById("graficoDividas").getContext("2d"), {
+        ...configGrafico,
+        data: {
+          labels: ["Pagas", "Pendentes"],
+          datasets: [{ data: [0, 0], backgroundColor: ["#28a745", "#dc3545"], borderWidth: 2, borderColor: "#fff" }]
+        }
+      });
+      const graficoLucros = new Chart(document.getElementById("graficoLucros").getContext("2d"), {
+        ...configGrafico,
+        data: {
+          labels: ["Recebidos", "Esperados"],
+          datasets: [{ data: [0, 0], backgroundColor: ["#28a745", "#17a2b8"], borderWidth: 2, borderColor: "#fff" }]
+        }
+      });
+      const graficoSalario = new Chart(document.getElementById("graficoSalario").getContext("2d"), {
+        ...configGrafico,
+        data: {
+          labels: ["Gastos", "Dívidas", "Disponível"],
+          datasets: [{ data: [0, 0, 0], backgroundColor: ["#dc3545", "#ffc107", "#28a745"], borderWidth: 2, borderColor: "#fff" }]
+        }
+      });
+
+      // ========== FUNÇÕES UTILITÁRIAS ==========
+      function fmt(valor) { return valor.toFixed(2).replace('.', ','); }
+      
+      function obterDataHoje() {
+        return new Date().toISOString().split('T')[0];
+      }
+
+      function mostrarToast(mensagem, tipo = 'info') {
+        const toast = document.getElementById("toast");
+        toast.textContent = mensagem;
+        toast.className = `show ${tipo}`;
+        setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+      }
+      
+      // ========== PERSISTÊNCIA DE DADOS ==========
+      function salvarDados() {
+        localStorage.setItem('financeFlowDados', JSON.stringify(dados));
+      }
+
+      function carregarDados() {
+        const dadosSalvos = localStorage.getItem('financeFlowDados');
+        if (dadosSalvos) {
+          dados = JSON.parse(dadosSalvos);
+        }
+      }
+
+      // ========== NAVEGAÇÃO ==========
+      function mudarAba(aba) {
+        document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        
+        document.querySelector(`.tab-button[data-aba="${aba}"]`).classList.add('active');
+        document.getElementById(`tab-${aba}`).classList.add('active');
+      }
+
+      // ========== TRANSAÇÕES ==========
+      function adicionarTransacao() {
+        const tipo = document.getElementById("tipo").value;
+        const categoria = document.getElementById("categoria").value;
+        const descricao = document.getElementById("descricao").value.trim();
+        const valor = parseFloat(document.getElementById("valor").value);
+
+        if (!descricao || isNaN(valor) || valor <= 0) {
+          mostrarToast("⚠️ Preencha todos os campos corretamente!", "error");
+          return;
+        }
+
+        const transacao = { id: Date.now(), descricao, valor, categoria, data: new Date().toLocaleDateString() };
+        
+        if (tipo === "gasto") dados.gastos.push(transacao);
+        else dados.receitas.push(transacao);
+
+        document.getElementById("descricao").value = "";
+        document.getElementById("valor").value = "";
+        mostrarToast("Transação adicionada!", "success");
+        atualizar();
+      }
+
+      function removerTransacao(tipo, id) {
+        if (confirm("🗑️ Deseja realmente apagar?")) {
+          if (tipo === 'gasto') {
+            dados.gastos = dados.gastos.filter(g => g.id !== id);
+          } else {
+            dados.receitas = dados.receitas.filter(r => r.id !== id);
           }
-        },
-        animation: { duration: 800 }
-      }
-    };
-
-    // ========== GRÁFICOS ==========
-    const graficoTransacoes = new Chart(document.getElementById("graficoTransacoes").getContext("2d"), {
-      ...configGrafico,
-      data: {
-        labels: Object.keys(coresCategorias),
-        datasets: [{ data: Array(8).fill(0), backgroundColor: Object.values(coresCategorias), borderWidth: 2, borderColor: "#fff" }]
-      }
-    });
-
-    const graficoDividas = new Chart(document.getElementById("graficoDividas").getContext("2d"), {
-      ...configGrafico,
-      data: {
-        labels: ["Pagas", "Pendentes"],
-        datasets: [{ data: [0, 0], backgroundColor: ["#28a745", "#dc3545"], borderWidth: 2, borderColor: "#fff" }]
-      }
-    });
-
-    const graficoLucros = new Chart(document.getElementById("graficoLucros").getContext("2d"), {
-      ...configGrafico,
-      data: {
-        labels: ["Recebidos", "Esperados"],
-        datasets: [{ data: [0, 0], backgroundColor: ["#28a745", "#17a2b8"], borderWidth: 2, borderColor: "#fff" }]
-      }
-    });
-
-    const graficoSalario = new Chart(document.getElementById("graficoSalario").getContext("2d"), {
-      ...configGrafico,
-      data: {
-        labels: ["Gastos", "Dívidas", "Disponível"],
-        datasets: [{ data: [0, 0, 0], backgroundColor: ["#dc3545", "#ffc107", "#28a745"], borderWidth: 2, borderColor: "#fff" }]
-      }
-    });
-
-    // ========== FUNÇÕES UTILITÁRIAS ==========
-    function fmt(valor) { return valor.toFixed(2).replace('.', ','); }
-    
-    function obterDataHoje() {
-      const hoje = new Date();
-      return hoje.toISOString().split('T')[0];
-    }
-
-    // ========== NAVEGAÇÃO ==========
-    function mudarAba(aba) {
-      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-      
-      event.target.classList.add('active');
-      document.getElementById(`tab-${aba}`).classList.add('active');
-    }
-
-    // ========== TRANSAÇÕES ==========
-    function adicionarTransacao() {
-      const tipo = document.getElementById("tipo").value;
-      const categoria = document.getElementById("categoria").value;
-      const descricao = document.getElementById("descricao").value.trim();
-      const valor = parseFloat(document.getElementById("valor").value);
-
-      if (!descricao || isNaN(valor) || valor <= 0) {
-        alert("⚠️ Preencha todos os campos corretamente!");
-        return;
+          atualizar();
+        }
       }
 
-      const transacao = { descricao, valor, categoria, data: new Date().toLocaleDateString() };
-      
-      if (tipo === "gasto") dados.gastos.push(transacao);
-      else dados.receitas.push(transacao);
+      // ========== DÍVIDAS ==========
+      function adicionarDivida() {
+        const nome = document.getElementById("dividaNome").value.trim();
+        const valor = parseFloat(document.getElementById("dividaValor").value);
+        const vencimento = document.getElementById("dividaVencimento").value;
+        const credor = document.getElementById("dividaCredor").value.trim();
 
-      document.getElementById("descricao").value = "";
-      document.getElementById("valor").value = "";
-      atualizar();
-    }
+        if (!nome || isNaN(valor) || valor <= 0 || !vencimento) {
+          mostrarToast("⚠️ Preencha todos os campos corretamente!", "error");
+          return;
+        }
 
-    function removerTransacao(tipo, index) {
-      if (confirm("🗑️ Deseja realmente apagar?")) {
-        dados[tipo === "gasto" ? "gastos" : "receitas"].splice(index, 1);
+        dados.dividas.push({ id: Date.now(), nome, valor, vencimento, credor, pago: false });
+        
+        document.getElementById("dividaNome").value = "";
+        document.getElementById("dividaValor").value = "";
+        document.getElementById("dividaCredor").value = "";
+        document.getElementById("dividaVencimento").value = obterDataHoje(); // Reseta para hoje
+        mostrarToast("Dívida adicionada!", "success");
         atualizar();
       }
-    }
 
-    // ========== DÍVIDAS ==========
-    function adicionarDivida() {
-      const nome = document.getElementById("dividaNome").value.trim();
-      const valor = parseFloat(document.getElementById("dividaValor").value);
-      const vencimento = document.getElementById("dividaVencimento").value;
-      const credor = document.getElementById("dividaCredor").value.trim();
-
-      if (!nome || isNaN(valor) || valor <= 0 || !vencimento) {
-        alert("⚠️ Preencha todos os campos corretamente!");
-        return;
+      function marcarDividaPaga(id) {
+        const divida = dados.dividas.find(d => d.id === id);
+        if (divida) {
+          divida.pago = !divida.pago;
+          atualizar();
+        }
       }
 
-      dados.dividas.push({ nome, valor, vencimento, credor, pago: false });
-      
-      document.getElementById("dividaNome").value = "";
-      document.getElementById("dividaValor").value = "";
-      document.getElementById("dividaVencimento").value = "";
-      document.getElementById("dividaCredor").value = "";
-      atualizar();
-    }
+      function removerDivida(id) {
+        if (confirm("🗑️ Deseja realmente apagar esta dívida?")) {
+          dados.dividas = dados.dividas.filter(d => d.id !== id);
+          atualizar();
+        }
+      }
 
-    function marcarDividaPaga(index) {
-      dados.dividas[index].pago = !dados.dividas[index].pago;
-      atualizar();
-    }
+      // ========== LUCROS ==========
+      function adicionarLucro() {
+        const fonte = document.getElementById("lucroFonte").value.trim();
+        const valor = parseFloat(document.getElementById("lucroValor").value);
+        const data = document.getElementById("lucroData").value;
+        const status = document.getElementById("lucroStatus").value;
 
-    function removerDivida(index) {
-      if (confirm("🗑️ Deseja realmente apagar esta dívida?")) {
-        dados.dividas.splice(index, 1);
+        if (!fonte || isNaN(valor) || valor <= 0 || !data) {
+          mostrarToast("⚠️ Preencha todos os campos corretamente!", "error");
+          return;
+        }
+
+        dados.lucros.push({ id: Date.now(), fonte, valor, data, status });
+        
+        document.getElementById("lucroFonte").value = "";
+        document.getElementById("lucroValor").value = "";
+        document.getElementById("lucroData").value = obterDataHoje(); // Reseta para hoje
+        mostrarToast("Lucro adicionado!", "success");
         atualizar();
       }
-    }
 
-    // ========== LUCROS ==========
-    function adicionarLucro() {
-      const fonte = document.getElementById("lucroFonte").value.trim();
-      const valor = parseFloat(document.getElementById("lucroValor").value);
-      const data = document.getElementById("lucroData").value;
-      const status = document.getElementById("lucroStatus").value;
-
-      if (!fonte || isNaN(valor) || valor <= 0 || !data) {
-        alert("⚠️ Preencha todos os campos corretamente!");
-        return;
+      function alterarStatusLucro(id) {
+        const lucro = dados.lucros.find(l => l.id === id);
+        if (lucro) {
+          lucro.status = lucro.status === "esperado" ? "recebido" : "esperado";
+          atualizar();
+        }
       }
 
-      dados.lucros.push({ fonte, valor, data, status });
-      
-      document.getElementById("lucroFonte").value = "";
-      document.getElementById("lucroValor").value = "";
-      document.getElementById("lucroData").value = "";
-      atualizar();
-    }
+      function removerLucro(id) {
+        if (confirm("🗑️ Deseja realmente apagar este lucro?")) {
+          dados.lucros = dados.lucros.filter(l => l.id !== id);
+          atualizar();
+        }
+      }
 
-    function alterarStatusLucro(index) {
-      dados.lucros[index].status = dados.lucros[index].status === "esperado" ? "recebido" : "esperado";
-      atualizar();
-    }
+      // ========== SALÁRIO ==========
+      function definirSalario() {
+        const salario = parseFloat(document.getElementById("salario").value);
+        
+        if (isNaN(salario) || salario < 0) { // Permite 0
+          mostrarToast("⚠️ Digite um valor válido!", "error");
+          return;
+        }
 
-    function removerLucro(index) {
-      if (confirm("🗑️ Deseja realmente apagar este lucro?")) {
-        dados.lucros.splice(index, 1);
+        dados.salario = salario;
+        document.getElementById("salario").value = "";
+        mostrarToast("Salário definido!", "success");
         atualizar();
       }
-    }
 
-    // ========== SALÁRIO ==========
-    function definirSalario() {
-      const salario = parseFloat(document.getElementById("salario").value);
-      
-      if (isNaN(salario) || salario <= 0) {
-        alert("⚠️ Digite um valor válido!");
-        return;
+      // ========== RESET ==========
+      function resetApp() {
+        if (confirm("⚠️ Tem certeza? Todos os dados serão apagados permanentemente!")) {
+          dados = { gastos: [], receitas: [], dividas: [], lucros: [], salario: 0 };
+          localStorage.removeItem('financeFlowDados');
+          atualizar();
+        }
       }
 
-      dados.salario = salario;
-      document.getElementById("salario").value = "";
-      atualizar();
-    }
-
-    // ========== RESET ==========
-    function resetApp() {
-      if (confirm("⚠️ Tem certeza? Todos os dados serão apagados!")) {
-        dados = { gastos: [], receitas: [], dividas: [], lucros: [], salario: 0 };
-        atualizar();
+      // ========== ATUALIZAÇÃO GERAL ==========
+      function atualizar() {
+        atualizarTransacoes();
+        atualizarDividas();
+        atualizarLucros();
+        atualizarSalario();
+        salvarDados(); // Ponto central de salvamento
       }
-    }
 
-    // ========== ATUALIZAÇÃO GERAL ==========
-    function atualizar() {
-      atualizarTransacoes();
-      atualizarDividas();
-      atualizarLucros();
-      atualizarSalario();
-    }
+      function atualizarTransacoes() {
+        const totalGastos = dados.gastos.reduce((acc, g) => acc + g.valor, 0);
+        const totalReceitas = dados.receitas.reduce((acc, r) => acc + r.valor, 0);
+        const saldo = totalReceitas - totalGastos;
 
-    function atualizarTransacoes() {
-      const totalGastos = dados.gastos.reduce((acc, g) => acc + g.valor, 0);
-      const totalReceitas = dados.receitas.reduce((acc, r) => acc + r.valor, 0);
-      const saldo = totalReceitas - totalGastos;
+        document.getElementById("totalReceitas").textContent = `R$ ${fmt(totalReceitas)}`;
+        document.getElementById("totalGastos").textContent = `R$ ${fmt(totalGastos)}`;
+        document.getElementById("saldoAtual").textContent = `R$ ${fmt(saldo)}`;
+        document.getElementById("saldoAtual").style.color = saldo >= 0 ? "var(--success)" : "var(--danger)";
 
-      document.getElementById("totalReceitas").textContent = `R$ ${fmt(totalReceitas)}`;
-      document.getElementById("totalGastos").textContent = `R$ ${fmt(totalGastos)}`;
-      document.getElementById("saldoAtual").textContent = `R$ ${fmt(saldo)}`;
-      document.getElementById("saldoAtual").style.color = saldo >= 0 ? "#28a745" : "#dc3545";
+        const maxValor = Math.max(totalReceitas, totalGastos, 1); // Evita divisão por zero
+        document.getElementById("progressReceitas").style.width = `${(totalReceitas/maxValor)*100}%`;
+        document.getElementById("progressGastos").style.width = `${(totalGastos/maxValor)*100}%`;
 
-      const maxValor = Math.max(totalReceitas, totalGastos);
-      document.getElementById("progressReceitas").style.width = maxValor > 0 ? `${(totalReceitas/maxValor)*100}%` : "0%";
-      document.getElementById("progressGastos").style.width = maxValor > 0 ? `${(totalGastos/maxValor)*100}%` : "0%";
+        // Gráfico
+        const totalPorCategoria = {};
+        Object.keys(coresCategorias).forEach(cat => totalPorCategoria[cat] = 0);
+        dados.gastos.forEach(g => totalPorCategoria[g.categoria] += g.valor);
+        graficoTransacoes.data.datasets[0].data = Object.values(totalPorCategoria);
+        graficoTransacoes.update();
 
-      // Atualizar gráfico
-      const totalPorCategoria = {};
-      Object.keys(coresCategorias).forEach(cat => totalPorCategoria[cat] = 0);
-      dados.gastos.forEach(g => totalPorCategoria[g.categoria] += g.valor);
-      
-      graficoTransacoes.data.datasets[0].data = Object.values(totalPorCategoria);
-      graficoTransacoes.update();
+        // Lista
+        const lista = document.getElementById("listaTransacoes");
+        lista.innerHTML = "";
+        const todasTransacoes = [
+          ...dados.gastos.map(g => ({...g, tipo: 'gasto'})),
+          ...dados.receitas.map(r => ({...r, tipo: 'receita'}))
+        ].sort((a, b) => b.id - a.id); // Ordena por mais recente (ID/Date.now())
 
-      // Atualizar lista
-      const lista = document.getElementById("listaTransacoes");
-      lista.innerHTML = "";
-
-      [...dados.gastos.map((g, i) => ({...g, tipo: 'gasto', index: i})),
-       ...dados.receitas.map((r, i) => ({...r, tipo: 'receita', index: i}))]
-        .sort((a, b) => new Date(b.data) - new Date(a.data))
-        .forEach(item => {
+        if (todasTransacoes.length === 0) {
+          lista.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📊</div><div class="empty-state-text">Nenhuma transação ainda</div></div>';
+          return;
+        }
+        
+        todasTransacoes.forEach(item => {
           const li = document.createElement("li");
           li.className = "fade-in";
           li.innerHTML = `
@@ -864,152 +702,202 @@
             </div>
             <div class="item-actions">
               <strong>R$ ${fmt(item.valor)}</strong>
-              <button class="btn btn-danger" onclick="removerTransacao('${item.tipo}', ${item.index})">✕</button>
+              <button class="btn btn-danger" data-action="remover-transacao" data-tipo="${item.tipo}" data-id="${item.id}">✕</button>
             </div>
           `;
           lista.appendChild(li);
         });
-
-      if (dados.gastos.length === 0 && dados.receitas.length === 0) {
-        lista.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📊</div><div class="empty-state-text">Nenhuma transação ainda</div></div>';
       }
-    }
 
-    function atualizarDividas() {
-      const pagas = dados.dividas.filter(d => d.pago);
-      const pendentes = dados.dividas.filter(d => !d.pago);
-      
-      const totalPagas = pagas.reduce((acc, d) => acc + d.valor, 0);
-      const totalPendentes = pendentes.reduce((acc, d) => acc + d.valor, 0);
-
-      // Verificar dívidas vencendo hoje
-      const hoje = obterDataHoje();
-      const vencendoHoje = pendentes.filter(d => d.vencimento === hoje).length;
-
-      document.getElementById("totalDividasPagas").textContent = `R$ ${fmt(totalPagas)}`;
-      document.getElementById("totalDividasPendentes").textContent = `R$ ${fmt(totalPendentes)}`;
-      document.getElementById("dividasVencendo").textContent = vencendoHoje;
-
-      // Atualizar gráfico
-      graficoDividas.data.datasets[0].data = [totalPagas, totalPendentes];
-      graficoDividas.update();
-
-      // Atualizar lista
-      const lista = document.getElementById("listaDividas");
-      lista.innerHTML = "";
-
-      dados.dividas.forEach((d, index) => {
-        const li = document.createElement("li");
-        li.className = "fade-in";
-        const dataFormatada = new Date(d.vencimento + 'T00:00:00').toLocaleDateString();
+      function atualizarDividas() {
+        const pagas = dados.dividas.filter(d => d.pago);
+        const pendentes = dados.dividas.filter(d => !d.pago);
         
-        li.innerHTML = `
-          <div class="item-info">
-            <div class="item-title">💳 ${d.nome}</div>
-            <div class="item-detail">${d.credor} • Vence: ${dataFormatada}</div>
-          </div>
-          <div class="item-actions">
-            <span class="badge ${d.pago ? 'paid' : 'pending'}">${d.pago ? 'Pago' : 'Pendente'}</span>
-            <strong>R$ ${fmt(d.valor)}</strong>
-            <button class="btn ${d.pago ? 'btn-info' : 'btn-success'}" onclick="marcarDividaPaga(${index})">
-              ${d.pago ? '↩️' : '✓'}
-            </button>
-            <button class="btn btn-danger" onclick="removerDivida(${index})">✕</button>
-          </div>
-        `;
-        lista.appendChild(li);
+        const totalPagas = pagas.reduce((acc, d) => acc + d.valor, 0);
+        const totalPendentes = pendentes.reduce((acc, d) => acc + d.valor, 0);
+        const hoje = obterDataHoje();
+        const vencendoHoje = pendentes.filter(d => d.vencimento === hoje).length;
+
+        document.getElementById("totalDividasPagas").textContent = `R$ ${fmt(totalPagas)}`;
+        document.getElementById("totalDividasPendentes").textContent = `R$ ${fmt(totalPendentes)}`;
+        document.getElementById("dividasVencendo").textContent = vencendoHoje;
+
+        // Gráfico
+        graficoDividas.data.datasets[0].data = [totalPagas, totalPendentes];
+        graficoDividas.update();
+
+        // Lista
+        const lista = document.getElementById("listaDividas");
+        lista.innerHTML = "";
+        
+        // Ordena por vencimento
+        dados.dividas.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
+        
+        if (dados.dividas.length === 0) {
+          lista.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💳</div><div class="empty-state-text">Nenhuma dívida cadastrada</div></div>';
+          return;
+        }
+        
+        dados.dividas.forEach(d => {
+          const li = document.createElement("li");
+          li.className = "fade-in";
+          const dataFormatada = new Date(d.vencimento + 'T00:00:00').toLocaleDateString();
+          li.innerHTML = `
+            <div class="item-info">
+              <div class="item-title">💳 ${d.nome}</div>
+              <div class="item-detail">${d.credor || 'Sem credor'} • Vence: ${dataFormatada}</div>
+            </div>
+            <div class="item-actions">
+              <span class="badge ${d.pago ? 'paid' : 'pending'}">${d.pago ? 'Pago' : 'Pendente'}</span>
+              <strong>R$ ${fmt(d.valor)}</strong>
+              <button class="btn ${d.pago ? 'btn-info' : 'btn-success'}" data-action="toggle-divida" data-id="${d.id}">
+                ${d.pago ? '↩️' : '✓'}
+              </button>
+              <button class="btn btn-danger" data-action="remover-divida" data-id="${d.id}">✕</button>
+            </div>
+          `;
+          lista.appendChild(li);
+        });
+      }
+
+      function atualizarLucros() {
+        const recebidos = dados.lucros.filter(l => l.status === "recebido");
+        const esperados = dados.lucros.filter(l => l.status === "esperado");
+        
+        const totalRecebidos = recebidos.reduce((acc, l) => acc + l.valor, 0);
+        const totalEsperados = esperados.reduce((acc, l) => acc + l.valor, 0);
+        const totalGeral = totalRecebidos + totalEsperados;
+        const taxa = totalGeral > 0 ? ((totalRecebidos / totalGeral) * 100) : 0;
+
+        document.getElementById("totalLucrosRecebidos").textContent = `R$ ${fmt(totalRecebidos)}`;
+        document.getElementById("totalLucrosEsperados").textContent = `R$ ${fmt(totalEsperados)}`;
+        document.getElementById("taxaRealizacao").textContent = `${taxa.toFixed(0)}%`;
+
+        // Gráfico
+        graficoLucros.data.datasets[0].data = [totalRecebidos, totalEsperados];
+        graficoLucros.update();
+
+        // Lista
+        const lista = document.getElementById("listaLucros");
+        lista.innerHTML = "";
+        
+        // Ordena por data
+        dados.lucros.sort((a, b) => new Date(a.data) - new Date(b.data));
+        
+        if (dados.lucros.length === 0) {
+          lista.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💎</div><div class="empty-state-text">Nenhum lucro cadastrado</div></div>';
+          return;
+        }
+
+        dados.lucros.forEach(l => {
+          const li = document.createElement("li");
+          li.className = "fade-in";
+          const dataFormatada = new Date(l.data + 'T00:00:00').toLocaleDateString();
+          li.innerHTML = `
+            <div class="item-info">
+              <div class="item-title">💎 ${l.fonte}</div>
+              <div class="item-detail">Data: ${dataFormatada}</div>
+            </div>
+            <div class="item-actions">
+              <span class="badge ${l.status === 'recebido' ? 'received' : 'expected'}">
+                ${l.status === 'recebido' ? 'Recebido' : 'Esperado'}
+              </span>
+              <strong>R$ ${fmt(l.valor)}</strong>
+              <button class="btn ${l.status === 'recebido' ? 'btn-info' : 'btn-success'}" data-action="toggle-lucro" data-id="${l.id}">
+                ${l.status === 'recebido' ? '↩️' : '✓'}
+              </button>
+              <button class="btn btn-danger" data-action="remover-lucro" data-id="${l.id}">✕</button>
+            </div>
+          `;
+          lista.appendChild(li);
+        });
+      }
+
+      function atualizarSalario() {
+        const totalGastos = dados.gastos.reduce((acc, g) => acc + g.valor, 0);
+        const totalReceitas = dados.receitas.reduce((acc, r) => acc + r.valor, 0);
+        const totalDividasPendentes = dados.dividas.filter(d => !d.pago).reduce((acc, d) => acc + d.valor, 0);
+        const totalLucrosRecebidos = dados.lucros.filter(l => l.status === "recebido").reduce((acc, l) => acc + l.valor, 0);
+        const totalLucrosEsperados = dados.lucros.filter(l => l.status === "esperado").reduce((acc, l) => acc + l.valor, 0);
+
+        const comprometido = totalGastos + totalDividasPendentes;
+        const disponivel = dados.salario + totalReceitas + totalLucrosRecebidos - comprometido;
+        const saldoFinal = disponivel + totalLucrosEsperados;
+
+        document.getElementById("salarioMensal").textContent = `R$ ${fmt(dados.salario)}`;
+        document.getElementById("totalComprometido").textContent = `R$ ${fmt(comprometido)}`;
+        document.getElementById("salarioDisponivel").textContent = `R$ ${fmt(disponivel)}`;
+        document.getElementById("salarioDisponivel").style.color = disponivel >= 0 ? "var(--success)" : "var(--danger)";
+
+        // Resumo
+        document.getElementById("resumoReceita").textContent = `R$ ${fmt(dados.salario + totalReceitas + totalLucrosRecebidos)}`;
+        document.getElementById("resumoGastos").textContent = `R$ ${fmt(totalGastos)}`;
+        document.getElementById("resumoDividas").textContent = `R$ ${fmt(totalDividasPendentes)}`;
+        document.getElementById("resumoLucros").textContent = `R$ ${fmt(totalLucrosEsperados)}`;
+        document.getElementById("saldoFinal").textContent = `R$ ${fmt(saldoFinal)}`;
+        document.getElementById("saldoFinal").style.color = saldoFinal >= 0 ? "var(--success)" : "var(--danger)";
+
+        // Gráfico
+        graficoSalario.data.datasets[0].data = [
+          totalGastos,
+          totalDividasPendentes,
+          Math.max(0, disponivel)
+        ];
+        graficoSalario.update();
+      }
+
+      // ========== EVENT LISTENERS (BOAS PRÁTICAS) ==========
+      
+      // Abas
+      document.querySelector('.tabs').addEventListener('click', (e) => {
+        if (e.target.classList.contains('tab-button')) {
+          mudarAba(e.target.dataset.aba);
+        }
       });
 
-      if (dados.dividas.length === 0) {
-        lista.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💳</div><div class="empty-state-text">Nenhuma dívida cadastrada</div></div>';
-      }
-    }
+      // Formulários
+      document.getElementById('btnAdicionarTransacao').addEventListener('click', adicionarTransacao);
+      document.getElementById('btnResetApp').addEventListener('click', resetApp);
+      document.getElementById('btnAdicionarDivida').addEventListener('click', adicionarDivida);
+      document.getElementById('btnAdicionarLucro').addEventListener('click', adicionarLucro);
+      document.getElementById('btnDefinirSalario').addEventListener('click', definirSalario);
 
-    function atualizarLucros() {
-      const recebidos = dados.lucros.filter(l => l.status === "recebido");
-      const esperados = dados.lucros.filter(l => l.status === "esperado");
-      
-      const totalRecebidos = recebidos.reduce((acc, l) => acc + l.valor, 0);
-      const totalEsperados = esperados.reduce((acc, l) => acc + l.valor, 0);
-      const totalGeral = totalRecebidos + totalEsperados;
-      const taxa = totalGeral > 0 ? ((totalRecebidos / totalGeral) * 100) : 0;
-
-      document.getElementById("totalLucrosRecebidos").textContent = `R$ ${fmt(totalRecebidos)}`;
-      document.getElementById("totalLucrosEsperados").textContent = `R$ ${fmt(totalEsperados)}`;
-      document.getElementById("taxaRealizacao").textContent = `${taxa.toFixed(1)}%`;
-
-      // Atualizar gráfico
-      graficoLucros.data.datasets[0].data = [totalRecebidos, totalEsperados];
-      graficoLucros.update();
-
-      // Atualizar lista
-      const lista = document.getElementById("listaLucros");
-      lista.innerHTML = "";
-
-      dados.lucros.forEach((l, index) => {
-        const li = document.createElement("li");
-        li.className = "fade-in";
-        const dataFormatada = new Date(l.data + 'T00:00:00').toLocaleDateString();
-        
-        li.innerHTML = `
-          <div class="item-info">
-            <div class="item-title">💎 ${l.fonte}</div>
-            <div class="item-detail">Data: ${dataFormatada}</div>
-          </div>
-          <div class="item-actions">
-            <span class="badge ${l.status === 'recebido' ? 'received' : 'expected'}">
-              ${l.status === 'recebido' ? 'Recebido' : 'Esperado'}
-            </span>
-            <strong>R$ ${fmt(l.valor)}</strong>
-            <button class="btn ${l.status === 'recebido' ? 'btn-info' : 'btn-success'}" onclick="alterarStatusLucro(${index})">
-              ${l.status === 'recebido' ? '↩️' : '✓'}
-            </button>
-            <button class="btn btn-danger" onclick="removerLucro(${index})">✕</button>
-          </div>
-        `;
-        lista.appendChild(li);
+      // Delegação de Eventos para Listas Dinâmicas
+      document.getElementById('listaTransacoes').addEventListener('click', (e) => {
+        const button = e.target.closest('button[data-action="remover-transacao"]');
+        if (button) {
+          removerTransacao(button.dataset.tipo, Number(button.dataset.id));
+        }
       });
 
-      if (dados.lucros.length === 0) {
-        lista.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💎</div><div class="empty-state-text">Nenhum lucro cadastrado</div></div>';
-      }
-    }
+      document.getElementById('listaDividas').addEventListener('click', (e) => {
+        const button = e.target.closest('button');
+        if (!button) return;
+        
+        const id = Number(button.dataset.id);
+        if (button.dataset.action === 'toggle-divida') marcarDividaPaga(id);
+        if (button.dataset.action === 'remover-divida') removerDivida(id);
+      });
 
-    function atualizarSalario() {
-      const totalGastos = dados.gastos.reduce((acc, g) => acc + g.valor, 0);
-      const totalReceitas = dados.receitas.reduce((acc, r) => acc + r.valor, 0);
-      const totalDividasPendentes = dados.dividas.filter(d => !d.pago).reduce((acc, d) => acc + d.valor, 0);
-      const totalLucrosRecebidos = dados.lucros.filter(l => l.status === "recebido").reduce((acc, l) => acc + l.valor, 0);
-      const totalLucrosEsperados = dados.lucros.filter(l => l.status === "esperado").reduce((acc, l) => acc + l.valor, 0);
+      document.getElementById('listaLucros').addEventListener('click', (e) => {
+        const button = e.target.closest('button');
+        if (!button) return;
+        
+        const id = Number(button.dataset.id);
+        if (button.dataset.action === 'toggle-lucro') alterarStatusLucro(id);
+        if (button.dataset.action === 'remover-lucro') removerLucro(id);
+      });
 
-      const comprometido = totalGastos + totalDividasPendentes;
-      const disponivel = dados.salario + totalReceitas + totalLucrosRecebidos - comprometido;
-      const saldoFinal = disponivel + totalLucrosEsperados;
+      // ========== INICIALIZAÇÃO DA APLICAÇÃO ==========
+      
+      // Define datas padrão para hoje
+      document.getElementById("dividaVencimento").value = obterDataHoje();
+      document.getElementById("lucroData").value = obterDataHoje();
 
-      document.getElementById("salarioMensal").textContent = `R$ ${fmt(dados.salario)}`;
-      document.getElementById("totalComprometido").textContent = `R$ ${fmt(comprometido)}`;
-      document.getElementById("salarioDisponivel").textContent = `R$ ${fmt(disponivel)}`;
-      document.getElementById("salarioDisponivel").style.color = disponivel >= 0 ? "#28a745" : "#dc3545";
-
-      // Resumo
-      document.getElementById("resumoReceita").textContent = `R$ ${fmt(totalReceitas + totalLucrosRecebidos)}`;
-      document.getElementById("resumoGastos").textContent = `R$ ${fmt(totalGastos)}`;
-      document.getElementById("resumoDividas").textContent = `R$ ${fmt(totalDividasPendentes)}`;
-      document.getElementById("resumoLucros").textContent = `R$ ${fmt(totalLucrosEsperados)}`;
-      document.getElementById("saldoFinal").textContent = `R$ ${fmt(saldoFinal)}`;
-      document.getElementById("saldoFinal").style.color = saldoFinal >= 0 ? "#28a745" : "#dc3545";
-
-      // Atualizar gráfico
-      graficoSalario.data.datasets[0].data = [
-        totalGastos,
-        totalDividasPendentes,
-        Math.max(0, disponivel)
-      ];
-      graficoSalario.update();
-    }
-
-    // ========== INICIALIZAÇÃO ==========
-    atualizar();
+      // Carrega dados salvos e atualiza a UI
+      carregarDados();
+      atualizar();
+    });
   </script>
 </body>
 </html>

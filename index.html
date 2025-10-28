@@ -7,7 +7,7 @@
   <title>FinanceFlow - Controle Financeiro</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* SEU CSS ORIGINAL (excelente, sem mudanças) */
+    /* SEU CSS ORIGINAL - mantido com pequenas adições para a tabela */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --primary: #0077b6; --primary-dark: #005a8d; --primary-light: #00a8e8;
@@ -128,15 +128,16 @@
       font-size: 1.25rem; color: var(--neutral-800); margin-bottom: 20px;
       font-weight: 600; display: flex; align-items: center; gap: 8px;
     }
-    ul { list-style: none; max-height: 400px; overflow-y: auto; }
+    /* Removendo estilos de UL/LI antigos para a nova tabela */
+    ul { list-style: none; /*max-height: 400px;*/ overflow-y: auto; }
     ul::-webkit-scrollbar { width: 6px; }
     ul::-webkit-scrollbar-track { background: var(--neutral-100); border-radius: 10px; }
     ul::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
-    li {
-      padding: 12px 8px; border-bottom: 1px solid var(--neutral-100);
+    li { /* Estes estilos serão substituídos pela nova estrutura de tabela */
+      /* padding: 12px 8px; border-bottom: 1px solid var(--neutral-100);
       display: flex; justify-content: space-between; align-items: center;
       font-size: 0.95rem; color: var(--neutral-800);
-      transition: background 0.2s ease; border-radius: var(--radius-sm);
+      transition: background 0.2s ease; border-radius: var(--radius-sm); */
     }
     li:hover { background: var(--neutral-50); }
     .item-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
@@ -211,6 +212,85 @@
     #toast.success { background: var(--success); }
     #toast.error { background: var(--danger); }
     #toast.info { background: var(--primary); }
+
+    /* 3. Estilos da Tabela (substitui a lista de transações) */
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto; /* Permite rolagem horizontal em telas pequenas */
+        -webkit-overflow-scrolling: touch; /* Melhor rolagem em iOS */
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+        margin-top: 20px;
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse; /* Remove espaçamento entre as células */
+        background-color: var(--white);
+        min-width: 600px; /* Garante que a tabela não fique muito pequena */
+    }
+
+    .data-table thead {
+        background-color: var(--neutral-100);
+        border-bottom: 2px solid var(--neutral-200);
+    }
+
+    .data-table th, .data-table td {
+        padding: 14px 20px;
+        text-align: left;
+        border-bottom: 1px solid var(--neutral-100);
+    }
+
+    .data-table th {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--neutral-400);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .data-table td {
+        font-size: 0.9rem;
+        color: var(--neutral-800);
+    }
+
+    .data-table tbody tr:hover {
+        background-color: var(--neutral-50);
+    }
+
+    .data-table .type-icon {
+        margin-right: 8px;
+        font-size: 1.1rem;
+    }
+
+    .data-table .value-cell {
+        font-weight: 600;
+        text-align: right; /* Alinha valores monetários à direita */
+    }
+
+    .data-table .actions-cell {
+        text-align: center;
+        width: 100px; /* Largura fixa para os botões de ação */
+    }
+    
+    .data-table .actions-cell .btn {
+      padding: 5px 10px; /* Ajusta o padding dos botões na tabela */
+    }
+
+    /* Cores específicas para valores */
+    .data-table .value-positive { color: var(--success); }
+    .data-table .value-negative { color: var(--danger); }
+
+    /* Responsividade da tabela */
+    @media (max-width: 600px) {
+        .data-table th, .data-table td {
+            padding: 10px 15px; /* Reduz padding em telas menores */
+        }
+        .data-table th:nth-child(4),
+        .data-table td:nth-child(4) {
+            display: none; /* Esconde a coluna de categoria em telas muito pequenas */
+        }
+    }
   </style>
 </head>
 <body>
@@ -274,37 +354,48 @@
           <canvas id="graficoTransacoes"></canvas>
         </div>
         <div class="card">
-          <h2>📝 Histórico</h2>
-          <ul id="listaTransacoes"></ul>
+          <h2>📝 Histórico de Transações</h2>
+          <div class="table-responsive">
+            <table class="data-table" id="listaTransacoes">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Descrição</th>
+                        <th>Categoria</th>
+                        <th>Data</th>
+                        <th style="text-align: right;">Valor</th>
+                        <th style="text-align: center;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
 
     <div id="tab-dividas" class="tab-content">
       <div class="form">
-        <label for="dividaNome" class="sr-only">Nome da dívida</label>
         <input type="text" id="dividaNome" placeholder="Nome da dívida">
-        <label for="dividaValor" class="sr-only">Valor</label>
         <input type="number" id="dividaValor" placeholder="Valor (R$)" step="0.01">
-        <label for="dividaVencimento" class="sr-only">Vencimento</label>
         <input type="date" id="dividaVencimento">
-        <label for="dividaCredor" class="sr-only">Credor</label>
         <input type="text" id="dividaCredor" placeholder="Credor">
-        <button id="btnAdicionarDivida">➕ Adicionar Dívida</button>
+        <button onclick="adicionarDivida()">➕ Adicionar Dívida</button>
       </div>
 
       <div class="stats-grid">
         <div class="stat-card negative">
           <div class="stat-label">💳 Dívidas Pendentes</div>
-          <div class="stat-value" id="totalDividasPendentes" aria-live="polite">R$ 0,00</div>
+          <div class="stat-value" id="totalDividasPendentes">R$ 0,00</div>
         </div>
         <div class="stat-card positive">
           <div class="stat-label">✅ Dívidas Pagas</div>
-          <div class="stat-value" id="totalDividasPagas" aria-live="polite">R$ 0,00</div>
+          <div class="stat-value" id="totalDividasPagas">R$ 0,00</div>
         </div>
         <div class="stat-card warning">
           <div class="stat-label">⏰ Vencendo Hoje</div>
-          <div class="stat-value" id="dividasVencendo" aria-live="polite">0</div>
+          <div class="stat-value" id="dividasVencendo">0</div>
         </div>
       </div>
 
@@ -322,32 +413,28 @@
 
     <div id="tab-lucros" class="tab-content">
       <div class="form">
-        <label for="lucroFonte" class="sr-only">Fonte do lucro</label>
         <input type="text" id="lucroFonte" placeholder="Fonte do lucro">
-        <label for="lucroValor" class="sr-only">Valor</label>
         <input type="number" id="lucroValor" placeholder="Valor (R$)" step="0.01">
-        <label for="lucroData" class="sr-only">Data</label>
         <input type="date" id="lucroData">
-        <label for="lucroStatus" class="sr-only">Status</label>
         <select id="lucroStatus">
           <option value="esperado">Esperado</option>
           <option value="recebido">Recebido</option>
         </select>
-        <button id="btnAdicionarLucro">➕ Adicionar Lucro</button>
+        <button onclick="adicionarLucro()">➕ Adicionar Lucro</button>
       </div>
 
       <div class="stats-grid">
         <div class="stat-card positive">
           <div class="stat-label">💎 Lucros Recebidos</div>
-          <div class="stat-value" id="totalLucrosRecebidos" aria-live="polite">R$ 0,00</div>
+          <div class="stat-value" id="totalLucrosRecebidos">R$ 0,00</div>
         </div>
         <div class="stat-card neutral">
           <div class="stat-label">⏳ Lucros Esperados</div>
-          <div class="stat-value" id="totalLucrosEsperados" aria-live="polite">R$ 0,00</div>
+          <div class="stat-value" id="totalLucrosEsperados">R$ 0,00</div>
         </div>
         <div class="stat-card warning">
           <div class="stat-label">📊 Taxa de Realização</div>
-          <div class="stat-value" id="taxaRealizacao" aria-live="polite">0%</div>
+          <div class="stat-value" id="taxaRealizacao">0%</div>
         </div>
       </div>
 
@@ -365,23 +452,22 @@
 
     <div id="tab-salario" class="tab-content">
       <div class="form">
-        <label for="salario" class="sr-only">Salário mensal</label>
         <input type="number" id="salario" placeholder="Salário mensal (R$)" step="0.01">
-        <button id="btnDefinirSalario">💼 Definir Salário</button>
+        <button onclick="definirSalario()">💼 Definir Salário</button>
       </div>
 
       <div class="stats-grid">
         <div class="stat-card neutral">
           <div class="stat-label">💼 Salário Mensal</div>
-          <div class="stat-value" id="salarioMensal" aria-live="polite">R$ 0,00</div>
+          <div class="stat-value" id="salarioMensal">R$ 0,00</div>
         </div>
         <div class="stat-card negative">
           <div class="stat-label">💸 Total Comprometido</div>
-          <div class="stat-value" id="totalComprometido" aria-live="polite">R$ 0,00</div>
+          <div class="stat-value" id="totalComprometido">R$ 0,00</div>
         </div>
         <div class="stat-card positive">
           <div class="stat-label">💰 Disponível</div>
-          <div class="stat-value" id="salarioDisponivel" aria-live="polite">R$ 0,00</div>
+          <div class="stat-value" id="salarioDisponivel">R$ 0,00</div>
         </div>
       </div>
 
@@ -394,19 +480,19 @@
           <h2>📈 Resumo Financeiro</h2>
           <div style="padding: 20px;">
             <div style="margin-bottom: 16px;">
-              <strong>Receita Total:</strong> <span id="resumoReceita" aria-live="polite">R$ 0,00</span>
+              <strong>Receita Total:</strong> <span id="resumoReceita">R$ 0,00</span>
             </div>
             <div style="margin-bottom: 16px;">
-              <strong>Gastos Totais:</strong> <span id="resumoGastos" aria-live="polite">R$ 0,00</span>
+              <strong>Gastos Totais:</strong> <span id="resumoGastos">R$ 0,00</span>
             </div>
             <div style="margin-bottom: 16px;">
-              <strong>Dívidas Pendentes:</strong> <span id="resumoDividas" aria-live="polite">R$ 0,00</span>
+              <strong>Dívidas Pendentes:</strong> <span id="resumoDividas">R$ 0,00</span>
             </div>
             <div style="margin-bottom: 16px;">
-              <strong>Lucros Esperados:</strong> <span id="resumoLucros" aria-live="polite">R$ 0,00</span>
+              <strong>Lucros Esperados:</strong> <span id="resumoLucros">R$ 0,00</span>
             </div>
             <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #0077b6; font-size: 1.2rem;">
-              <strong>Saldo Final:</strong> <span id="saldoFinal" style="color: #0077b6;" aria-live="polite">R$ 0,00</span>
+              <strong>Saldo Final:</strong> <span id="saldoFinal" style="color: #0077b6;">R$ 0,00</span>
             </div>
           </div>
         </div>
@@ -417,22 +503,17 @@
   <div id="toast"></div>
 
   <script>
-    // ========== INICIALIZAÇÃO ==========
     document.addEventListener('DOMContentLoaded', () => {
-      
-      // ========== DADOS DA APLICAÇÃO ==========
       let dados = {
         gastos: [], receitas: [], dividas: [], lucros: [], salario: 0
       };
 
-      // ========== CONFIGURAÇÕES ==========
       const coresCategorias = {
         Abundar: "#264653", Doar: "#2a9d8f", Investir: "#e9c46a", Educar: "#f4a261",
         Desfrutar: "#e76f51", Conquistar: "#6a4c93", Sustentar: "#0077b6", Bug: "#90e0ef"
       };
 
-      const configGrafico = {
-        type: "doughnut",
+      const baseConfigGrafico = {
         options: {
           responsive: true, maintainAspectRatio: true,
           plugins: {
@@ -441,10 +522,13 @@
               backgroundColor: 'rgba(0,0,0,0.8)', padding: 12, cornerRadius: 8,
               callbacks: {
                 label: function(ctx) {
-                  let total = ctx.dataset.data.reduce((a,b) => a+b, 0);
                   let valor = ctx.raw;
-                  let pct = total > 0 ? ((valor/total)*100).toFixed(1) : 0;
-                  return `${ctx.label}: R$ ${valor.toFixed(2)} (${pct}%)`;
+                  if (ctx.dataset.label === 'Porcentagem') { // Para gráficos de pizza/doughnut
+                    let total = ctx.dataset.data.reduce((a,b) => a+b, 0);
+                    let pct = total > 0 ? ((valor/total)*100).toFixed(1) : 0;
+                    return `${ctx.label}: R$ ${valor.toFixed(2)} (${pct}%)`;
+                  }
+                  return `${ctx.label}: R$ ${valor.toFixed(2)}`; // Para barras
                 }
               }
             }
@@ -453,451 +537,51 @@
         }
       };
 
-      // ========== GRÁFICOS ==========
+      // Gráfico de Transações (AGORA É BARRA HORIZONTAL)
       const graficoTransacoes = new Chart(document.getElementById("graficoTransacoes").getContext("2d"), {
-        ...configGrafico,
+        type: "bar", // MUDANÇA: tipo de gráfico
         data: {
           labels: Object.keys(coresCategorias),
-          datasets: [{ data: Array(8).fill(0), backgroundColor: Object.values(coresCategorias), borderWidth: 2, borderColor: "#fff" }]
+          datasets: [{
+            label: 'Total Gasto por Categoria',
+            data: Array(8).fill(0),
+            backgroundColor: Object.values(coresCategorias),
+            borderColor: '#fff',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          ...baseConfigGrafico.options,
+          indexAxis: 'y', // Faz as barras serem horizontais
+          scales: {
+            x: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Valor (R$)'
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Categoria'
+              }
+            }
+          }
         }
       });
+
+      // Gráfico de Dívidas (mantido como doughnut)
       const graficoDividas = new Chart(document.getElementById("graficoDividas").getContext("2d"), {
-        ...configGrafico,
+        type: "doughnut",
         data: {
           labels: ["Pagas", "Pendentes"],
           datasets: [{ data: [0, 0], backgroundColor: ["#28a745", "#dc3545"], borderWidth: 2, borderColor: "#fff" }]
-        }
+        },
+        options: { ...baseConfigGrafico.options }
       });
+
+      // Gráfico de Lucros (mantido como doughnut)
       const graficoLucros = new Chart(document.getElementById("graficoLucros").getContext("2d"), {
-        ...configGrafico,
-        data: {
-          labels: ["Recebidos", "Esperados"],
-          datasets: [{ data: [0, 0], backgroundColor: ["#28a745", "#17a2b8"], borderWidth: 2, borderColor: "#fff" }]
-        }
-      });
-      const graficoSalario = new Chart(document.getElementById("graficoSalario").getContext("2d"), {
-        ...configGrafico,
-        data: {
-          labels: ["Gastos", "Dívidas", "Disponível"],
-          datasets: [{ data: [0, 0, 0], backgroundColor: ["#dc3545", "#ffc107", "#28a745"], borderWidth: 2, borderColor: "#fff" }]
-        }
-      });
-
-      // ========== FUNÇÕES UTILITÁRIAS ==========
-      function fmt(valor) { return valor.toFixed(2).replace('.', ','); }
-      
-      function obterDataHoje() {
-        return new Date().toISOString().split('T')[0];
-      }
-
-      function mostrarToast(mensagem, tipo = 'info') {
-        const toast = document.getElementById("toast");
-        toast.textContent = mensagem;
-        toast.className = `show ${tipo}`;
-        setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
-      }
-      
-      // ========== PERSISTÊNCIA DE DADOS ==========
-      function salvarDados() {
-        localStorage.setItem('financeFlowDados', JSON.stringify(dados));
-      }
-
-      function carregarDados() {
-        const dadosSalvos = localStorage.getItem('financeFlowDados');
-        if (dadosSalvos) {
-          dados = JSON.parse(dadosSalvos);
-        }
-      }
-
-      // ========== NAVEGAÇÃO ==========
-      function mudarAba(aba) {
-        document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-        
-        document.querySelector(`.tab-button[data-aba="${aba}"]`).classList.add('active');
-        document.getElementById(`tab-${aba}`).classList.add('active');
-      }
-
-      // ========== TRANSAÇÕES ==========
-      function adicionarTransacao() {
-        const tipo = document.getElementById("tipo").value;
-        const categoria = document.getElementById("categoria").value;
-        const descricao = document.getElementById("descricao").value.trim();
-        const valor = parseFloat(document.getElementById("valor").value);
-
-        if (!descricao || isNaN(valor) || valor <= 0) {
-          mostrarToast("⚠️ Preencha todos os campos corretamente!", "error");
-          return;
-        }
-
-        const transacao = { id: Date.now(), descricao, valor, categoria, data: new Date().toLocaleDateString() };
-        
-        if (tipo === "gasto") dados.gastos.push(transacao);
-        else dados.receitas.push(transacao);
-
-        document.getElementById("descricao").value = "";
-        document.getElementById("valor").value = "";
-        mostrarToast("Transação adicionada!", "success");
-        atualizar();
-      }
-
-      function removerTransacao(tipo, id) {
-        if (confirm("🗑️ Deseja realmente apagar?")) {
-          if (tipo === 'gasto') {
-            dados.gastos = dados.gastos.filter(g => g.id !== id);
-          } else {
-            dados.receitas = dados.receitas.filter(r => r.id !== id);
-          }
-          atualizar();
-        }
-      }
-
-      // ========== DÍVIDAS ==========
-      function adicionarDivida() {
-        const nome = document.getElementById("dividaNome").value.trim();
-        const valor = parseFloat(document.getElementById("dividaValor").value);
-        const vencimento = document.getElementById("dividaVencimento").value;
-        const credor = document.getElementById("dividaCredor").value.trim();
-
-        if (!nome || isNaN(valor) || valor <= 0 || !vencimento) {
-          mostrarToast("⚠️ Preencha todos os campos corretamente!", "error");
-          return;
-        }
-
-        dados.dividas.push({ id: Date.now(), nome, valor, vencimento, credor, pago: false });
-        
-        document.getElementById("dividaNome").value = "";
-        document.getElementById("dividaValor").value = "";
-        document.getElementById("dividaCredor").value = "";
-        document.getElementById("dividaVencimento").value = obterDataHoje(); // Reseta para hoje
-        mostrarToast("Dívida adicionada!", "success");
-        atualizar();
-      }
-
-      function marcarDividaPaga(id) {
-        const divida = dados.dividas.find(d => d.id === id);
-        if (divida) {
-          divida.pago = !divida.pago;
-          atualizar();
-        }
-      }
-
-      function removerDivida(id) {
-        if (confirm("🗑️ Deseja realmente apagar esta dívida?")) {
-          dados.dividas = dados.dividas.filter(d => d.id !== id);
-          atualizar();
-        }
-      }
-
-      // ========== LUCROS ==========
-      function adicionarLucro() {
-        const fonte = document.getElementById("lucroFonte").value.trim();
-        const valor = parseFloat(document.getElementById("lucroValor").value);
-        const data = document.getElementById("lucroData").value;
-        const status = document.getElementById("lucroStatus").value;
-
-        if (!fonte || isNaN(valor) || valor <= 0 || !data) {
-          mostrarToast("⚠️ Preencha todos os campos corretamente!", "error");
-          return;
-        }
-
-        dados.lucros.push({ id: Date.now(), fonte, valor, data, status });
-        
-        document.getElementById("lucroFonte").value = "";
-        document.getElementById("lucroValor").value = "";
-        document.getElementById("lucroData").value = obterDataHoje(); // Reseta para hoje
-        mostrarToast("Lucro adicionado!", "success");
-        atualizar();
-      }
-
-      function alterarStatusLucro(id) {
-        const lucro = dados.lucros.find(l => l.id === id);
-        if (lucro) {
-          lucro.status = lucro.status === "esperado" ? "recebido" : "esperado";
-          atualizar();
-        }
-      }
-
-      function removerLucro(id) {
-        if (confirm("🗑️ Deseja realmente apagar este lucro?")) {
-          dados.lucros = dados.lucros.filter(l => l.id !== id);
-          atualizar();
-        }
-      }
-
-      // ========== SALÁRIO ==========
-      function definirSalario() {
-        const salario = parseFloat(document.getElementById("salario").value);
-        
-        if (isNaN(salario) || salario < 0) { // Permite 0
-          mostrarToast("⚠️ Digite um valor válido!", "error");
-          return;
-        }
-
-        dados.salario = salario;
-        document.getElementById("salario").value = "";
-        mostrarToast("Salário definido!", "success");
-        atualizar();
-      }
-
-      // ========== RESET ==========
-      function resetApp() {
-        if (confirm("⚠️ Tem certeza? Todos os dados serão apagados permanentemente!")) {
-          dados = { gastos: [], receitas: [], dividas: [], lucros: [], salario: 0 };
-          localStorage.removeItem('financeFlowDados');
-          atualizar();
-        }
-      }
-
-      // ========== ATUALIZAÇÃO GERAL ==========
-      function atualizar() {
-        atualizarTransacoes();
-        atualizarDividas();
-        atualizarLucros();
-        atualizarSalario();
-        salvarDados(); // Ponto central de salvamento
-      }
-
-      function atualizarTransacoes() {
-        const totalGastos = dados.gastos.reduce((acc, g) => acc + g.valor, 0);
-        const totalReceitas = dados.receitas.reduce((acc, r) => acc + r.valor, 0);
-        const saldo = totalReceitas - totalGastos;
-
-        document.getElementById("totalReceitas").textContent = `R$ ${fmt(totalReceitas)}`;
-        document.getElementById("totalGastos").textContent = `R$ ${fmt(totalGastos)}`;
-        document.getElementById("saldoAtual").textContent = `R$ ${fmt(saldo)}`;
-        document.getElementById("saldoAtual").style.color = saldo >= 0 ? "var(--success)" : "var(--danger)";
-
-        const maxValor = Math.max(totalReceitas, totalGastos, 1); // Evita divisão por zero
-        document.getElementById("progressReceitas").style.width = `${(totalReceitas/maxValor)*100}%`;
-        document.getElementById("progressGastos").style.width = `${(totalGastos/maxValor)*100}%`;
-
-        // Gráfico
-        const totalPorCategoria = {};
-        Object.keys(coresCategorias).forEach(cat => totalPorCategoria[cat] = 0);
-        dados.gastos.forEach(g => totalPorCategoria[g.categoria] += g.valor);
-        graficoTransacoes.data.datasets[0].data = Object.values(totalPorCategoria);
-        graficoTransacoes.update();
-
-        // Lista
-        const lista = document.getElementById("listaTransacoes");
-        lista.innerHTML = "";
-        const todasTransacoes = [
-          ...dados.gastos.map(g => ({...g, tipo: 'gasto'})),
-          ...dados.receitas.map(r => ({...r, tipo: 'receita'}))
-        ].sort((a, b) => b.id - a.id); // Ordena por mais recente (ID/Date.now())
-
-        if (todasTransacoes.length === 0) {
-          lista.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📊</div><div class="empty-state-text">Nenhuma transação ainda</div></div>';
-          return;
-        }
-        
-        todasTransacoes.forEach(item => {
-          const li = document.createElement("li");
-          li.className = "fade-in";
-          li.innerHTML = `
-            <div class="item-info">
-              <div class="item-title">${item.tipo === 'gasto' ? '💸' : '💵'} ${item.descricao}</div>
-              <div class="item-detail">${item.categoria || 'Receita'} • ${item.data}</div>
-            </div>
-            <div class="item-actions">
-              <strong>R$ ${fmt(item.valor)}</strong>
-              <button class="btn btn-danger" data-action="remover-transacao" data-tipo="${item.tipo}" data-id="${item.id}">✕</button>
-            </div>
-          `;
-          lista.appendChild(li);
-        });
-      }
-
-      function atualizarDividas() {
-        const pagas = dados.dividas.filter(d => d.pago);
-        const pendentes = dados.dividas.filter(d => !d.pago);
-        
-        const totalPagas = pagas.reduce((acc, d) => acc + d.valor, 0);
-        const totalPendentes = pendentes.reduce((acc, d) => acc + d.valor, 0);
-        const hoje = obterDataHoje();
-        const vencendoHoje = pendentes.filter(d => d.vencimento === hoje).length;
-
-        document.getElementById("totalDividasPagas").textContent = `R$ ${fmt(totalPagas)}`;
-        document.getElementById("totalDividasPendentes").textContent = `R$ ${fmt(totalPendentes)}`;
-        document.getElementById("dividasVencendo").textContent = vencendoHoje;
-
-        // Gráfico
-        graficoDividas.data.datasets[0].data = [totalPagas, totalPendentes];
-        graficoDividas.update();
-
-        // Lista
-        const lista = document.getElementById("listaDividas");
-        lista.innerHTML = "";
-        
-        // Ordena por vencimento
-        dados.dividas.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
-        
-        if (dados.dividas.length === 0) {
-          lista.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💳</div><div class="empty-state-text">Nenhuma dívida cadastrada</div></div>';
-          return;
-        }
-        
-        dados.dividas.forEach(d => {
-          const li = document.createElement("li");
-          li.className = "fade-in";
-          const dataFormatada = new Date(d.vencimento + 'T00:00:00').toLocaleDateString();
-          li.innerHTML = `
-            <div class="item-info">
-              <div class="item-title">💳 ${d.nome}</div>
-              <div class="item-detail">${d.credor || 'Sem credor'} • Vence: ${dataFormatada}</div>
-            </div>
-            <div class="item-actions">
-              <span class="badge ${d.pago ? 'paid' : 'pending'}">${d.pago ? 'Pago' : 'Pendente'}</span>
-              <strong>R$ ${fmt(d.valor)}</strong>
-              <button class="btn ${d.pago ? 'btn-info' : 'btn-success'}" data-action="toggle-divida" data-id="${d.id}">
-                ${d.pago ? '↩️' : '✓'}
-              </button>
-              <button class="btn btn-danger" data-action="remover-divida" data-id="${d.id}">✕</button>
-            </div>
-          `;
-          lista.appendChild(li);
-        });
-      }
-
-      function atualizarLucros() {
-        const recebidos = dados.lucros.filter(l => l.status === "recebido");
-        const esperados = dados.lucros.filter(l => l.status === "esperado");
-        
-        const totalRecebidos = recebidos.reduce((acc, l) => acc + l.valor, 0);
-        const totalEsperados = esperados.reduce((acc, l) => acc + l.valor, 0);
-        const totalGeral = totalRecebidos + totalEsperados;
-        const taxa = totalGeral > 0 ? ((totalRecebidos / totalGeral) * 100) : 0;
-
-        document.getElementById("totalLucrosRecebidos").textContent = `R$ ${fmt(totalRecebidos)}`;
-        document.getElementById("totalLucrosEsperados").textContent = `R$ ${fmt(totalEsperados)}`;
-        document.getElementById("taxaRealizacao").textContent = `${taxa.toFixed(0)}%`;
-
-        // Gráfico
-        graficoLucros.data.datasets[0].data = [totalRecebidos, totalEsperados];
-        graficoLucros.update();
-
-        // Lista
-        const lista = document.getElementById("listaLucros");
-        lista.innerHTML = "";
-        
-        // Ordena por data
-        dados.lucros.sort((a, b) => new Date(a.data) - new Date(b.data));
-        
-        if (dados.lucros.length === 0) {
-          lista.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💎</div><div class="empty-state-text">Nenhum lucro cadastrado</div></div>';
-          return;
-        }
-
-        dados.lucros.forEach(l => {
-          const li = document.createElement("li");
-          li.className = "fade-in";
-          const dataFormatada = new Date(l.data + 'T00:00:00').toLocaleDateString();
-          li.innerHTML = `
-            <div class="item-info">
-              <div class="item-title">💎 ${l.fonte}</div>
-              <div class="item-detail">Data: ${dataFormatada}</div>
-            </div>
-            <div class="item-actions">
-              <span class="badge ${l.status === 'recebido' ? 'received' : 'expected'}">
-                ${l.status === 'recebido' ? 'Recebido' : 'Esperado'}
-              </span>
-              <strong>R$ ${fmt(l.valor)}</strong>
-              <button class="btn ${l.status === 'recebido' ? 'btn-info' : 'btn-success'}" data-action="toggle-lucro" data-id="${l.id}">
-                ${l.status === 'recebido' ? '↩️' : '✓'}
-              </button>
-              <button class="btn btn-danger" data-action="remover-lucro" data-id="${l.id}">✕</button>
-            </div>
-          `;
-          lista.appendChild(li);
-        });
-      }
-
-      function atualizarSalario() {
-        const totalGastos = dados.gastos.reduce((acc, g) => acc + g.valor, 0);
-        const totalReceitas = dados.receitas.reduce((acc, r) => acc + r.valor, 0);
-        const totalDividasPendentes = dados.dividas.filter(d => !d.pago).reduce((acc, d) => acc + d.valor, 0);
-        const totalLucrosRecebidos = dados.lucros.filter(l => l.status === "recebido").reduce((acc, l) => acc + l.valor, 0);
-        const totalLucrosEsperados = dados.lucros.filter(l => l.status === "esperado").reduce((acc, l) => acc + l.valor, 0);
-
-        const comprometido = totalGastos + totalDividasPendentes;
-        const disponivel = dados.salario + totalReceitas + totalLucrosRecebidos - comprometido;
-        const saldoFinal = disponivel + totalLucrosEsperados;
-
-        document.getElementById("salarioMensal").textContent = `R$ ${fmt(dados.salario)}`;
-        document.getElementById("totalComprometido").textContent = `R$ ${fmt(comprometido)}`;
-        document.getElementById("salarioDisponivel").textContent = `R$ ${fmt(disponivel)}`;
-        document.getElementById("salarioDisponivel").style.color = disponivel >= 0 ? "var(--success)" : "var(--danger)";
-
-        // Resumo
-        document.getElementById("resumoReceita").textContent = `R$ ${fmt(dados.salario + totalReceitas + totalLucrosRecebidos)}`;
-        document.getElementById("resumoGastos").textContent = `R$ ${fmt(totalGastos)}`;
-        document.getElementById("resumoDividas").textContent = `R$ ${fmt(totalDividasPendentes)}`;
-        document.getElementById("resumoLucros").textContent = `R$ ${fmt(totalLucrosEsperados)}`;
-        document.getElementById("saldoFinal").textContent = `R$ ${fmt(saldoFinal)}`;
-        document.getElementById("saldoFinal").style.color = saldoFinal >= 0 ? "var(--success)" : "var(--danger)";
-
-        // Gráfico
-        graficoSalario.data.datasets[0].data = [
-          totalGastos,
-          totalDividasPendentes,
-          Math.max(0, disponivel)
-        ];
-        graficoSalario.update();
-      }
-
-      // ========== EVENT LISTENERS (BOAS PRÁTICAS) ==========
-      
-      // Abas
-      document.querySelector('.tabs').addEventListener('click', (e) => {
-        if (e.target.classList.contains('tab-button')) {
-          mudarAba(e.target.dataset.aba);
-        }
-      });
-
-      // Formulários
-      document.getElementById('btnAdicionarTransacao').addEventListener('click', adicionarTransacao);
-      document.getElementById('btnResetApp').addEventListener('click', resetApp);
-      document.getElementById('btnAdicionarDivida').addEventListener('click', adicionarDivida);
-      document.getElementById('btnAdicionarLucro').addEventListener('click', adicionarLucro);
-      document.getElementById('btnDefinirSalario').addEventListener('click', definirSalario);
-
-      // Delegação de Eventos para Listas Dinâmicas
-      document.getElementById('listaTransacoes').addEventListener('click', (e) => {
-        const button = e.target.closest('button[data-action="remover-transacao"]');
-        if (button) {
-          removerTransacao(button.dataset.tipo, Number(button.dataset.id));
-        }
-      });
-
-      document.getElementById('listaDividas').addEventListener('click', (e) => {
-        const button = e.target.closest('button');
-        if (!button) return;
-        
-        const id = Number(button.dataset.id);
-        if (button.dataset.action === 'toggle-divida') marcarDividaPaga(id);
-        if (button.dataset.action === 'remover-divida') removerDivida(id);
-      });
-
-      document.getElementById('listaLucros').addEventListener('click', (e) => {
-        const button = e.target.closest('button');
-        if (!button) return;
-        
-        const id = Number(button.dataset.id);
-        if (button.dataset.action === 'toggle-lucro') alterarStatusLucro(id);
-        if (button.dataset.action === 'remover-lucro') removerLucro(id);
-      });
-
-      // ========== INICIALIZAÇÃO DA APLICAÇÃO ==========
-      
-      // Define datas padrão para hoje
-      document.getElementById("dividaVencimento").value = obterDataHoje();
-      document.getElementById("lucroData").value = obterDataHoje();
-
-      // Carrega dados salvos e atualiza a UI
-      carregarDados();
-      atualizar();
-    });
-  </script>
-</body>
-</html>
+        type: "doughnut",
+        data
